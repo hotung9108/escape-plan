@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://d0op85h1k8gvl"]
+[gd_scene load_steps=41 format=3 uid="uid://d0op85h1k8gvl"]
 
 [ext_resource type="Script" uid="uid://cuk64vpt8oyov" path="res://scripts/player/player_controller.gd" id="1_rp718"]
 [ext_resource type="Texture2D" uid="uid://chsecnrbdbfsv" path="res://assets/sprites/MysticWood/player.png" id="2_yewv4"]
@@ -288,16 +288,21 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_yewv4"]
+radius = 5.0
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_rp718")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_hdner")
-animation = &"back_walk"
-frame = 3
-frame_progress = 0.5945268
+animation = &"side_idle"
+offset = Vector2(0, -15)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, -2)
+shape = SubResource("CircleShape2D_yewv4")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
