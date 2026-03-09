@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6yo4q31okka2"]
+
+[ext_resource type="PackedScene" uid="uid://d0op85h1k8gvl" path="res://scenes/characters/player.tscn" id="1_n4jd4"]
+[ext_resource type="Script" uid="uid://blnjey421q5lo" path="res://scripts/mission/MissionSystem.gd" id="5_isrli"]
+
+[node name="MissionDevelop" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_n4jd4")]
+y_sort_enabled = true
+
+[node name="MissionSystem" type="Node2D" parent="."]
+position = Vector2(-1, 0)
+script = ExtResource("5_isrli")
+keyObjects = Array[Color]([Color(1, 0, 0, 1), Color(0, 0, 1, 1), Color(0, 1, 0, 1)])
