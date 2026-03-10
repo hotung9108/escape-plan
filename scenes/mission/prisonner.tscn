@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://c61oirjm6auk6"]
+
+[ext_resource type="Script" uid="uid://h1yswivgrq5l" path="res://scripts/ai/prisoner_ai.gd" id="1_dm5wk"]
+[ext_resource type="SpriteFrames" uid="uid://bdi67opo5heru" path="res://assets/animation/dino/blue_dino.tres" id="2_dm5wk"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_011hk"]
+radius = 30.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vx30l"]
+
+[node name="Prisonner" type="CharacterBody2D"]
+script = ExtResource("1_dm5wk")
+DISTANCE = 30
+SPEED = 50.0
+
+[node name="TriggerArea" type="Area2D" parent="."]
+visible = false
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TriggerArea"]
+shape = SubResource("CircleShape2D_011hk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vx30l")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_index = -1
+position = Vector2(1, 1)
+sprite_frames = ExtResource("2_dm5wk")
+animation = &"idle"

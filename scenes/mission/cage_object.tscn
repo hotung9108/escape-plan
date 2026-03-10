@@ -74,7 +74,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"break",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -105,7 +105,7 @@ size = Vector2(17, 21)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_23lmm"]
 size = Vector2(17, 3.5)
 
-[node name="CageObject" type="Node2D"]
+[node name="CageObject" type="StaticBody2D"]
 z_index = -1
 y_sort_enabled = true
 scale = Vector2(2, 2)
@@ -115,8 +115,10 @@ script = ExtResource("1_4rcx7")
 y_sort_enabled = true
 position = Vector2(-2.5, -8)
 sprite_frames = SubResource("SpriteFrames_rig2v")
-animation = &"interact"
+animation = &"break"
 autoplay = "idle"
+frame = 6
+frame_progress = 1.0
 
 [node name="Lock" type="Sprite2D" parent="."]
 y_sort_enabled = true
@@ -124,9 +126,7 @@ position = Vector2(0, -3)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_x2fx0")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -4.5)
 shape = SubResource("RectangleShape2D_isrli")
 

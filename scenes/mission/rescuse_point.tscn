@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://k48e8gl3mah7"]
+
+[ext_resource type="Texture2D" uid="uid://bkgco0o5ba8t7" path="res://assets/icon.svg" id="1_ny7id"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s60r8"]
+size = Vector2(32, 32)
+
+[node name="RescusePoint" type="Area2D" groups=["Spawn"]]
+z_index = -2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_ny7id")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_s60r8")

@@ -1,0 +1,29 @@
+[gd_scene load_steps=9 format=3 uid="uid://da2fofovjyd0i"]
+
+[ext_resource type="Script" uid="uid://blnjey421q5lo" path="res://scripts/mission/MissionSystem.gd" id="1_g1t2e"]
+[ext_resource type="Script" uid="uid://c2ugxu7c1cud0" path="res://scripts/mission/MissionObjectData.gd" id="2_ouokk"]
+[ext_resource type="SpriteFrames" uid="uid://b42xhiracrq5b" path="res://assets/animation/dino/red_dino.tres" id="3_7imw0"]
+[ext_resource type="SpriteFrames" uid="uid://dc771b4w4uhg6" path="res://assets/animation/dino/green_dino.tres" id="4_w364t"]
+[ext_resource type="SpriteFrames" uid="uid://bdi67opo5heru" path="res://assets/animation/dino/blue_dino.tres" id="5_aq4yk"]
+
+[sub_resource type="Resource" id="Resource_04lw0"]
+script = ExtResource("2_ouokk")
+color = Color(1, 0, 0, 1)
+prisonnerSpriteFrames = ExtResource("3_7imw0")
+metadata/_custom_type_script = "uid://c2ugxu7c1cud0"
+
+[sub_resource type="Resource" id="Resource_iehoh"]
+script = ExtResource("2_ouokk")
+color = Color(0, 1, 0, 1)
+prisonnerSpriteFrames = ExtResource("4_w364t")
+metadata/_custom_type_script = "uid://c2ugxu7c1cud0"
+
+[sub_resource type="Resource" id="Resource_7imw0"]
+script = ExtResource("2_ouokk")
+color = Color(0, 0, 1, 1)
+prisonnerSpriteFrames = ExtResource("5_aq4yk")
+metadata/_custom_type_script = "uid://c2ugxu7c1cud0"
+
+[node name="MissionSystem" type="Node2D"]
+script = ExtResource("1_g1t2e")
+missionObjects = Array[ExtResource("2_ouokk")]([SubResource("Resource_04lw0"), SubResource("Resource_iehoh"), SubResource("Resource_7imw0")])

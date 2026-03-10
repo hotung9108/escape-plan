@@ -16,5 +16,5 @@ func open():
 	get_node("CageAnimator").play("break")
 	get_node("Lock").visible = false
 	await get_node("CageAnimator").animation_finished
-	get_node("StaticBody2D/CollisionShape2D").disabled = true
+	get_node("CollisionShape2D").disabled = true
 	get_node("TriggerArea").set_deferred("monitoring", false)

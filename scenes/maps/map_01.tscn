@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://c86stdyugk21j"]
+[gd_scene load_steps=45 format=3 uid="uid://c86stdyugk21j"]
 
 [ext_resource type="Texture2D" uid="uid://bayi4ftu43a40" path="res://assets/tiles/Kenny-Pirate Tiles/Default/Tilemap/tilemap_packed.png" id="1_g5h58"]
 [ext_resource type="Script" uid="uid://blhbye40g1uqt" path="res://scripts/rooms/rooms.gd" id="1_hsmnc"]
@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://fkwxle55qso1" path="res://assets/tiles/Farm and Tree Tiles/Tilesets/Tilled_Dirt.png" id="13_u2lui"]
 [ext_resource type="Texture2D" uid="uid://cme1lfwhr3rbj" path="res://assets/tiles/Farm and Tree Tiles/Tilesets/Tilled_Dirt_v2.png" id="14_nkd1n"]
 [ext_resource type="Texture2D" uid="uid://p2a8wr3s2srh" path="res://assets/tiles/Farm and Tree Tiles/Tilesets/Tilled_Dirt_Wide.png" id="15_inhmn"]
+[ext_resource type="PackedScene" uid="uid://da2fofovjyd0i" path="res://scenes/mission/mission_system.tscn" id="20_msigb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hrjdk"]
 texture = ExtResource("1_g5h58")
@@ -1704,3 +1705,5 @@ position = Vector2(49, 28)
 
 [node name="Player" parent="." instance=ExtResource("4_hrjdk")]
 position = Vector2(210, 71)
+
+[node name="MissionSystem" parent="." instance=ExtResource("20_msigb")]
