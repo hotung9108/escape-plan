@@ -62,15 +62,17 @@ func on_player_enter_cage(cageObject, body):
 			cageObject.interact()
 
 func on_player_enter_spawn(body):
-	if body.is_in_group("Player"):
+	if body.is_in_group("Prisonner"):
 		for i in range(pickUpPrisonners.size() - 1, -1, -1):
-			if pickUpPrisonners[i].state == "idle":
+			#if pickUpPrisonners[i].state == "idle":
 				rescusePrisonnerNumber += 1
 				
 				var prisoner = pickUpPrisonners[i]
 				pickUpPrisonners.remove_at(i)
 				
 				prisoner.queue_free()
+				
+				print("Rescuse ", rescusePrisonnerNumber, " prisonner", "" if rescusePrisonnerNumber == 1 else "s")
 
 		if rescusePrisonnerNumber >= missionObjects.size():
 			print("Mission completed")

@@ -8,7 +8,7 @@ radius = 30.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vx30l"]
 
-[node name="Prisonner" type="CharacterBody2D"]
+[node name="Prisonner" type="CharacterBody2D" groups=["Prisonner"]]
 script = ExtResource("1_dm5wk")
 DISTANCE = 30
 SPEED = 50.0
