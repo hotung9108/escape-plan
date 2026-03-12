@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://c86stdyugk21j"]
+[gd_scene load_steps=48 format=3 uid="uid://c86stdyugk21j"]
 
 [ext_resource type="Texture2D" uid="uid://bayi4ftu43a40" path="res://assets/tiles/Kenny-Pirate Tiles/Default/Tilemap/tilemap_packed.png" id="1_g5h58"]
 [ext_resource type="Script" uid="uid://blhbye40g1uqt" path="res://scripts/rooms/rooms.gd" id="1_hsmnc"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://cme1lfwhr3rbj" path="res://assets/tiles/Farm and Tree Tiles/Tilesets/Tilled_Dirt_v2.png" id="14_nkd1n"]
 [ext_resource type="Texture2D" uid="uid://p2a8wr3s2srh" path="res://assets/tiles/Farm and Tree Tiles/Tilesets/Tilled_Dirt_Wide.png" id="15_inhmn"]
 [ext_resource type="Script" uid="uid://di3fv56r2twex" path="res://scripts/house.gd" id="17_msigb"]
+[ext_resource type="Script" uid="uid://bkmme6feh8x21" path="res://scripts/wp_house.gd" id="19_tfnqt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hrjdk"]
 texture = ExtResource("1_g5h58")
@@ -1680,35 +1681,59 @@ script = ExtResource("1_hsmnc")
 
 [node name="Room_A" type="Node2D" parent="House/Interior/Rooms"]
 
-[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_A"]
+[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_A" groups=["room_group"]]
 
 [node name="PatrolPoints" type="Node2D" parent="House/Interior/Rooms/Room_A"]
 
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="House/Interior/Rooms/Room_A"]
+
 [node name="Room_B" type="Node2D" parent="House/Interior/Rooms"]
 
-[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_B"]
+[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_B" groups=["room_group"]]
 
 [node name="PatrolPoints" type="Node2D" parent="House/Interior/Rooms/Room_B"]
 
 [node name="Room_C" type="Node2D" parent="House/Interior/Rooms"]
 
-[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_C"]
+[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_C" groups=["room_group"]]
 
 [node name="PatrolPoints" type="Node2D" parent="House/Interior/Rooms/Room_C"]
 
 [node name="Room_D" type="Node2D" parent="House/Interior/Rooms"]
 
-[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_D"]
+[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_D" groups=["room_group"]]
 
 [node name="PatrolPoints" type="Node2D" parent="House/Interior/Rooms/Room_D"]
 
 [node name="Room_E" type="Node2D" parent="House/Interior/Rooms"]
 
-[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_E"]
+[node name="RoomZone" type="Area2D" parent="House/Interior/Rooms/Room_E" groups=["room_group"]]
 
 [node name="PatrolPoints" type="Node2D" parent="House/Interior/Rooms/Room_E"]
 
+[node name="WayPoints_House" type="Node2D" parent="House/Interior"]
+
+[node name="WP_House1" type="Node2D" parent="House/Interior/WayPoints_House"]
+position = Vector2(-91, -777)
+script = ExtResource("19_tfnqt")
+connections = Array[NodePath]([NodePath("../WP_House2"), NodePath("../WP_House4")])
+
+[node name="WP_House2" type="Node2D" parent="House/Interior/WayPoints_House"]
+position = Vector2(1354, -824)
+script = ExtResource("19_tfnqt")
+connections = Array[NodePath]([NodePath("../WP_House3"), NodePath("../WP_House1")])
+
+[node name="WP_House3" type="Node2D" parent="House/Interior/WayPoints_House"]
+position = Vector2(1337, -1626)
+script = ExtResource("19_tfnqt")
+connections = Array[NodePath]([NodePath("../WP_House4"), NodePath("../WP_House2")])
+
+[node name="WP_House4" type="Node2D" parent="House/Interior/WayPoints_House"]
+position = Vector2(-28, -1643)
+script = ExtResource("19_tfnqt")
+
 [node name="DoorZone_1" type="Area2D" parent="House"]
+visible = false
 script = ExtResource("2_bepxa")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="House/DoorZone_1"]
@@ -1716,6 +1741,7 @@ position = Vector2(610, -358)
 shape = SubResource("RectangleShape2D_oendh")
 
 [node name="DoorZone_2" type="Area2D" parent="House"]
+visible = false
 position = Vector2(13, 11)
 script = ExtResource("2_bepxa")
 
@@ -1731,6 +1757,8 @@ position = Vector2(49, 28)
 
 [node name="Player" parent="." groups=["player"] instance=ExtResource("4_hrjdk")]
 position = Vector2(210, 71)
+
+[node name="Node" type="Node" parent="."]
 
 [connection signal="body_entered" from="House/DoorZone_1" to="House/DoorZone_1" method="_on_body_entered"]
 [connection signal="body_entered" from="House/DoorZone_2" to="House/DoorZone_2" method="_on_body_entered"]

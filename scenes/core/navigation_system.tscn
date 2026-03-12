@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://dfkivgg2sll80"]
+
+[ext_resource type="Script" uid="uid://elo0lw15cjm7" path="res://scripts/room_manager.gd" id="1_08hly"]
+[ext_resource type="Script" uid="uid://hkgcdu5o2del" path="res://scripts/waypoint_manager.gd" id="1_dbgua"]
+[ext_resource type="Script" uid="uid://rmf5u3j16ctc" path="res://scripts/navigation_system.gd" id="1_r7xgg"]
+
+[node name="NavigationSystem" type="Node2D"]
+script = ExtResource("1_r7xgg")
+
+[node name="RoomManager" type="Node2D" parent="."]
+script = ExtResource("1_08hly")
+
+[node name="WaypointManager" type="Node2D" parent="."]
+script = ExtResource("1_dbgua")
