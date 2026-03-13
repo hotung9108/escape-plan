@@ -1,13 +1,12 @@
 extends Node
 
 # Dependencies
-@export var player: Node2D
 @export var rescuse_point: Area2D
 
 # Attributes 
 @export var missionObjects: Array[mission_object] = []
 @export var rescusePosition: Vector2
-@export var maxPickUpPrisonnerNumber: int
+@export var maxPickUpPrisonnerNumber: int = 1
 
 # Resources
 var keyObject = preload("res://scenes/mission/key_object.tscn")
@@ -20,7 +19,7 @@ var pickUpKeys: Array[int] = []
 var pickUpPrisonners: Array[Node2D] = []
 var rescusePrisonnerNumber: int = 0
 
-func _ready():
+func _setup():
 	if rescuse_point == null:
 		rescuse_point = rescusePointObject.instantiate()
 		rescuse_point.position = rescusePosition

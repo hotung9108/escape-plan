@@ -6,6 +6,7 @@
 
 [node name="RescusePoint" type="Area2D" groups=["Spawn"]]
 z_index = -2
+metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.25, 0.25)

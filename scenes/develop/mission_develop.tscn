@@ -8,10 +8,10 @@
 
 [node name="Player" parent="." instance=ExtResource("1_n4jd4")]
 y_sort_enabled = true
+position = Vector2(0, 1)
 
 [node name="MissionSystem" parent="." node_paths=PackedStringArray("rescuse_point") instance=ExtResource("2_7l3pc")]
 rescuse_point = NodePath("../RescusePoint")
-maxPickUpPrisonnerNumber = 1
 
 [node name="RescusePoint" parent="." instance=ExtResource("3_kbsa5")]
 position = Vector2(55, 0)
