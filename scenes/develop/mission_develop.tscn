@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://b6yo4q31okka2"]
+
+[ext_resource type="PackedScene" uid="uid://d0op85h1k8gvl" path="res://scenes/characters/player.tscn" id="1_n4jd4"]
+[ext_resource type="PackedScene" uid="uid://da2fofovjyd0i" path="res://scenes/mission/mission_system.tscn" id="2_7l3pc"]
+[ext_resource type="PackedScene" uid="uid://k48e8gl3mah7" path="res://scenes/mission/rescuse_point.tscn" id="3_kbsa5"]
+
+[node name="MissionDevelop" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_n4jd4")]
+y_sort_enabled = true
+position = Vector2(0, 1)
+
+[node name="MissionSystem" parent="." node_paths=PackedStringArray("rescuse_point") instance=ExtResource("2_7l3pc")]
+rescuse_point = NodePath("../RescusePoint")
+
+[node name="RescusePoint" parent="." instance=ExtResource("3_kbsa5")]
+position = Vector2(55, 0)
