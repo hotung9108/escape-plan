@@ -1,27 +1,45 @@
-[gd_scene load_steps=4 format=3 uid="uid://73iql2w1b728"]
+[gd_scene load_steps=13 format=3 uid="uid://73iql2w1b728"]
 
 [ext_resource type="PackedScene" uid="uid://d0op85h1k8gvl" path="res://scenes/characters/player.tscn" id="1_ygwrf"]
 [ext_resource type="Script" uid="uid://ygw46gcaajm6" path="res://scripts/enemy/path_system.gd" id="2_newos"]
 [ext_resource type="PackedScene" uid="uid://c7m174thiut6q" path="res://scenes/enemy/point.tscn" id="3_ygwrf"]
+[ext_resource type="Script" uid="uid://clamnlsyt2yuu" path="res://scripts/enemy/enemy_controller.gd" id="4_d4n40"]
+[ext_resource type="Texture2D" uid="uid://ctv3lnk3netwk" path="res://assets/tiles/MysticWood/tilesets/floors/wooden.png" id="4_mgoop"]
+[ext_resource type="Script" uid="uid://c7dr1to65jloj" path="res://scripts/enemy/enemy_direct_run.gd" id="5_newos"]
+[ext_resource type="Script" uid="uid://dpbdx6a7kctn1" path="res://scenes/enemy/enemy_path_finding.gd" id="7_cdu5w"]
+[ext_resource type="Texture2D" uid="uid://bkgco0o5ba8t7" path="res://assets/icon.svg" id="7_oo8y3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_newos"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cdu5w"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d4n40"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cdu5w"]
 
 [node name="enemy_develop" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_ygwrf")]
+position = Vector2(307, 189)
 
 [node name="PathSystem" type="Node2D" parent="."]
 script = ExtResource("2_newos")
 
 [node name="Point" parent="PathSystem" node_paths=PackedStringArray("relativeNodes") instance=ExtResource("3_ygwrf")]
-position = Vector2(59, 0)
-relativeNodes = [NodePath("../Point2")]
+position = Vector2(308, 85)
+relativeNodes = [NodePath("../Point7"), NodePath("../Point3")]
+
+[node name="Point7" parent="PathSystem" node_paths=PackedStringArray("relativeNodes") instance=ExtResource("3_ygwrf")]
+position = Vector2(305, 187)
+relativeNodes = [NodePath("../Point")]
 
 [node name="Point2" parent="PathSystem" node_paths=PackedStringArray("relativeNodes") instance=ExtResource("3_ygwrf")]
 position = Vector2(57, 85)
-relativeNodes = [NodePath("../Point3"), NodePath("../Point4"), NodePath("../Point")]
+relativeNodes = [NodePath("../Point3"), NodePath("../Point4")]
 
 [node name="Point3" parent="PathSystem" node_paths=PackedStringArray("relativeNodes") instance=ExtResource("3_ygwrf")]
 position = Vector2(173, 84)
-relativeNodes = [NodePath("../Point2")]
+relativeNodes = [NodePath("../Point2"), NodePath("../Point")]
 
 [node name="Point4" parent="PathSystem" node_paths=PackedStringArray("relativeNodes") instance=ExtResource("3_ygwrf")]
 position = Vector2(57, 167)
@@ -34,3 +52,71 @@ relativeNodes = [NodePath("../Point4"), NodePath("../Point6")]
 [node name="Point6" parent="PathSystem" node_paths=PackedStringArray("relativeNodes") instance=ExtResource("3_ygwrf")]
 position = Vector2(170, 231)
 relativeNodes = [NodePath("../Point5")]
+
+[node name="Enemy" type="CharacterBody2D" parent="." node_paths=PackedStringArray("pathSystem", "currentNode")]
+position = Vector2(169, 233)
+script = ExtResource("4_d4n40")
+pathSystem = NodePath("../PathSystem")
+SPEED = 50.0
+currentNode = NodePath("../PathSystem/Point6")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy"]
+shape = SubResource("CircleShape2D_newos")
+
+[node name="WallRayCast2D" type="RayCast2D" parent="Enemy"]
+enabled = false
+target_position = Vector2(0, 0)
+collision_mask = 2
+
+[node name="WallShapeCast2D" type="ShapeCast2D" parent="Enemy"]
+enabled = false
+shape = SubResource("CircleShape2D_cdu5w")
+target_position = Vector2(0, 0)
+max_results = 1
+collision_mask = 2
+
+[node name="TriggerArea" type="Area2D" parent="Enemy"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy/TriggerArea"]
+scale = Vector2(30, 30)
+shape = SubResource("CircleShape2D_d4n40")
+
+[node name="Sprite2D" type="Sprite2D" parent="Enemy"]
+texture = ExtResource("4_mgoop")
+
+[node name="DirectRun" type="Node" parent="Enemy"]
+physics_interpolation_mode = 2
+script = ExtResource("5_newos")
+
+[node name="PathFinding" type="Node" parent="Enemy"]
+script = ExtResource("7_cdu5w")
+
+[node name="Wall" type="StaticBody2D" parent="."]
+position = Vector2(179, 0)
+scale = Vector2(10, 6)
+collision_layer = 3
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Wall"]
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("7_oo8y3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall"]
+shape = SubResource("RectangleShape2D_cdu5w")
+
+[node name="Wall2" type="StaticBody2D" parent="."]
+position = Vector2(182.00002, 160)
+scale = Vector2(10, 5)
+collision_layer = 3
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Wall2"]
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("7_oo8y3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall2"]
+shape = SubResource("RectangleShape2D_cdu5w")
+
+[connection signal="body_entered" from="Enemy/TriggerArea" to="Enemy" method="_on_trigger_area_body_entered"]
+[connection signal="body_exited" from="Enemy/TriggerArea" to="Enemy" method="_on_trigger_area_body_exited"]
