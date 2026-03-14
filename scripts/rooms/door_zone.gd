@@ -1,26 +1,29 @@
 extends Area2D
 
-@export var roof_layer: Node
+var house
 
-func _on_body_entered(body):
-	if body.is_in_group("player"):
-		roof_layer.visible = false
+func _ready():
+	house = get_parent()
 
-func _on_body_exited(body):
-	if body.is_in_group("player"):
-		roof_layer.visible = true
+func enter_house():
+	print("Player enter house")
+	GameManager.enter_house(house)
+	house.get_node("Exterior").hide()
+	#house.get_node("Interior").show()
+func exit_house():
+	print("Player exit house")
+	
+	GameManager.exit_house()
+	house.get_node("Exterior").show()
+	#house.get_node("Interior").hide()
 
-#extends Area2D
-#
-#@export var interior_root: Node2D
-#@export var exterior_root: Node2D
-#
-#func _on_body_entered(body):
-	#if body.is_in_group("player"):
-		#interior_root.visible = true
-		#exterior_root.visible = false
-#
-#func _on_body_exited(body):
-	#if body.is_in_group("player"):
-		#interior_root.visible = false
-		#exterior_root.visible = true
+
+func _on_body_entered(body: Node2D) -> void:
+	
+	if !body.is_in_group("player"):
+		return
+
+	if GameManager.player_inside_house:
+		exit_house()
+	else:
+		enter_house()
