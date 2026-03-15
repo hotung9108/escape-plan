@@ -9,22 +9,32 @@ var pathIndex: int = 0
 var nextNode: Node2D = null
 
 func run(sNode: Node2D, eNode: Node2D) -> Vector2:
+	# Already at destination
+	if sNode == eNode:
+		nextNode = eNode
+		return Vector2.ZERO
+	
+	# Recalculate path if destination changed
 	if eNode != endNode:
 		endNode = eNode
 		calculate_path(sNode, eNode)
-		
+		pathIndex = 0  # Reset index on new path
 	
+	# Check if path exists
+	if path.is_empty():
+		nextNode = eNode  # No path found, aim for end node
+		return Vector2.ZERO
+	
+	# Move to next waypoint if reached current one
 	if sNode == nextNode or nextNode == null:
 		pathIndex += 1
-		if pathIndex < path.size():
-			nextNode = path[pathIndex]
-		else:
-			nextNode = null
 	
-	if nextNode == null:
-		return Vector2.ZERO
-	else:
-		return get_parent().position.direction_to(nextNode.position)
+	# ✅ Clamp pathIndex to stay within bounds
+	pathIndex = mini(pathIndex, path.size() - 1)
+	nextNode = path[pathIndex]
+	
+	# Return direction to next waypoint
+	return get_parent().position.direction_to(nextNode.position)
 
 func calculate_path(sNode: Node2D, eNode: Node2D):
 	pq.clear()

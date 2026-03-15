@@ -13,8 +13,6 @@ func _ready():
 	
 	for r in relativeNodes:
 		relativeNodesDistance.push_back(position.distance_squared_to(r.position))
-	
-	print(get_parent().nodes)
 
 func set_vertex_weight(value: int, parent: Node2D):
 	vertexWeight = value

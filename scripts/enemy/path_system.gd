@@ -19,27 +19,28 @@ func _ready() -> void:
 	reset_player_related_points()
 	player = get_tree().get_first_node_in_group("Player")
 	canCalculate = true
-	calculate_relative_points_vertex_weight()
+	calculate_player_relative_points_vertex_weight()
 
 func _process(delta: float):
-	calculate_relative_points_vertex_weight()
+	calculate_player_relative_points_vertex_weight()
 
-func find_nearest_node() -> Node2D:
-	if nodes.is_empty() or not player:
+func find_object_nearest_node(object: Node2D) -> Node2D:
+	if nodes.is_empty() or not object:
 		return null
+	
 	var nearest_node: Node2D = nodes[0]
-	var min_distance_squared := player.position.distance_squared_to(nearest_node.position)
+	var min_distance_squared := object.position.distance_squared_to(nearest_node.position)
 	for i in range(1, nodes.size()):
-		var distance_squared := player.position.distance_squared_to(nodes[i].position)
+		var distance_squared := object.position.distance_squared_to(nodes[i].position)
 		if distance_squared < min_distance_squared:
 			min_distance_squared = distance_squared
 			nearest_node = nodes[i]
 	return nearest_node
 
-func calculate_relative_points_vertex_weight():
+func calculate_player_relative_points_vertex_weight():
 	if !canCalculate: return
 	
-	var newNeareastPoint = find_nearest_node()
+	var newNeareastPoint = find_object_nearest_node(player)
 	
 	if newNeareastPoint == null: return
 	

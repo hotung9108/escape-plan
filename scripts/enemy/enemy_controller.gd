@@ -15,7 +15,7 @@ enum  ENEMY_STATE {
 	PATH_FINDING
 }
 var state: ENEMY_STATE = ENEMY_STATE.IDLE
-@export var currentNode: Node2D
+var currentNode: Node2D
 
 func _ready() -> void:
 	raycast = get_node("WallRayCast2D")
@@ -23,6 +23,7 @@ func _ready() -> void:
 	raycast.enabled = false 
 	raycast.collision_mask = 2
 	player = get_tree().get_first_node_in_group("Player")
+	currentNode = pathSystem.find_object_nearest_node(self)
 	get_node("PathFinding").nextNode = currentNode
 
 func _physics_process(delta: float):
@@ -35,12 +36,18 @@ func state_decide():
 		raycast.target_position = to_local(player.global_position)
 		raycast.force_raycast_update()
 		if raycast.is_colliding():
+			if state != ENEMY_STATE.PATH_FINDING:
+				currentNode = pathSystem.find_object_nearest_node(self)
+				get_node("PathFinding").nextNode = currentNode
 			state = ENEMY_STATE.PATH_FINDING
 		else:
 			shapecast.enabled = true
 			shapecast.target_position = to_local(player.global_position)
 			shapecast.force_shapecast_update()
 			if shapecast.is_colliding():
+				if state != ENEMY_STATE.PATH_FINDING:
+					currentNode = pathSystem.find_object_nearest_node(self)
+					get_node("PathFinding").nextNode = currentNode
 				state = ENEMY_STATE.PATH_FINDING
 			else:
 				state = ENEMY_STATE.CHASE
