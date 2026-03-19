@@ -22,7 +22,7 @@ NoiseManager="*res://scripts/managers/NoiseManager.gd"
 
 [display]
 
-window/stretch/scale=4.0
+window/stretch/scale=2.0
 
 [global_group]
 
@@ -30,6 +30,7 @@ Player=""
 Spawn=""
 Prisonner=""
 Map=""
+Enemy=""
 
 [rendering]
 

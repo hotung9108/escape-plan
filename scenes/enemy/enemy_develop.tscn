@@ -1,20 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://73iql2w1b728"]
+[gd_scene load_steps=8 format=3 uid="uid://73iql2w1b728"]
 
 [ext_resource type="PackedScene" uid="uid://d0op85h1k8gvl" path="res://scenes/characters/player.tscn" id="1_ygwrf"]
 [ext_resource type="Script" uid="uid://ygw46gcaajm6" path="res://scripts/enemy/path_system.gd" id="2_newos"]
 [ext_resource type="PackedScene" uid="uid://c7m174thiut6q" path="res://scenes/enemy/point.tscn" id="3_ygwrf"]
-[ext_resource type="Script" uid="uid://clamnlsyt2yuu" path="res://scripts/enemy/enemy_controller.gd" id="4_d4n40"]
-[ext_resource type="Texture2D" uid="uid://ctv3lnk3netwk" path="res://assets/tiles/MysticWood/tilesets/floors/wooden.png" id="4_mgoop"]
-[ext_resource type="Script" uid="uid://c7dr1to65jloj" path="res://scripts/enemy/enemy_direct_run.gd" id="5_newos"]
-[ext_resource type="Script" uid="uid://dpbdx6a7kctn1" path="res://scenes/enemy/enemy_path_finding.gd" id="7_cdu5w"]
+[ext_resource type="PackedScene" uid="uid://ihbvhxu5qix6" path="res://scenes/enemy/enemy_sample.tscn" id="4_d4n40"]
 [ext_resource type="Texture2D" uid="uid://bkgco0o5ba8t7" path="res://assets/icon.svg" id="7_oo8y3"]
 [ext_resource type="Script" uid="uid://cmn1d6h72odfk" path="res://scripts/enemy/map_data.gd" id="9_ycd1i"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_newos"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_cdu5w"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_d4n40"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cdu5w"]
 
@@ -54,43 +45,8 @@ relativeNodes = [NodePath("../Point4"), NodePath("../Point6")]
 position = Vector2(170, 231)
 relativeNodes = [NodePath("../Point5")]
 
-[node name="Enemy" type="CharacterBody2D" parent="." node_paths=PackedStringArray("pathSystem")]
+[node name="Enemy" parent="." instance=ExtResource("4_d4n40")]
 position = Vector2(169, 233)
-script = ExtResource("4_d4n40")
-pathSystem = NodePath("../PathSystem")
-SPEED = 50.0
-metadata/_edit_group_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy"]
-shape = SubResource("CircleShape2D_newos")
-
-[node name="WallRayCast2D" type="RayCast2D" parent="Enemy"]
-enabled = false
-target_position = Vector2(0, 0)
-collision_mask = 2
-
-[node name="WallShapeCast2D" type="ShapeCast2D" parent="Enemy"]
-enabled = false
-shape = SubResource("CircleShape2D_cdu5w")
-target_position = Vector2(0, 0)
-max_results = 1
-collision_mask = 2
-
-[node name="TriggerArea" type="Area2D" parent="Enemy"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy/TriggerArea"]
-scale = Vector2(30, 30)
-shape = SubResource("CircleShape2D_d4n40")
-
-[node name="Sprite2D" type="Sprite2D" parent="Enemy"]
-texture = ExtResource("4_mgoop")
-
-[node name="DirectRun" type="Node" parent="Enemy"]
-physics_interpolation_mode = 2
-script = ExtResource("5_newos")
-
-[node name="PathFinding" type="Node" parent="Enemy"]
-script = ExtResource("7_cdu5w")
 
 [node name="Wall" type="StaticBody2D" parent="."]
 position = Vector2(179, 0)
@@ -120,6 +76,3 @@ shape = SubResource("RectangleShape2D_cdu5w")
 
 [node name="MapData" type="Node" parent="." groups=["Map"]]
 script = ExtResource("9_ycd1i")
-
-[connection signal="body_entered" from="Enemy/TriggerArea" to="Enemy" method="_on_trigger_area_body_entered"]
-[connection signal="body_exited" from="Enemy/TriggerArea" to="Enemy" method="_on_trigger_area_body_exited"]

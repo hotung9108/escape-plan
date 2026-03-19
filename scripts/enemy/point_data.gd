@@ -20,12 +20,12 @@ func set_vertex_weight(value: int, parent: Node2D):
 	
 	get_parent().playerRelatedPoints.append(self)
 	
-	if value == PathSystem.maxChildGeneration: return
-	
-	for r in relativeNodes:
-		if r == parent and parent != null:
-			continue
-		r.set_vertex_weight(value + 1, self)
+	#if value == PathSystem.maxChildGeneration: return
+	#
+	#for r in relativeNodes:
+		#if r == parent and parent != null:
+			#continue
+		#r.set_vertex_weight(value + 1, self)
 
 func reset_node():
 	vertexWeight = PathSystem.maxChildGeneration + 1

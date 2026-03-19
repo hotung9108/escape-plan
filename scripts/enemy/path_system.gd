@@ -3,7 +3,7 @@ class_name PathSystem
 
 #Config
 static var maxChildGeneration: int = 6
-static var maxDistance: float = 15
+static var maxDistance: float = 100
 
 # Dependencies
 @export var player: Node2D
@@ -21,7 +21,6 @@ func _ready() -> void:
 	reset_player_related_points()
 	player = get_tree().get_first_node_in_group("Player")
 	mapData = get_tree().get_first_node_in_group("Map")
-	canCalculate = true
 	calculate_player_relative_points_vertex_weight()
 	maxDistance = maxDistance * maxDistance
 
@@ -53,7 +52,7 @@ func calculate_player_relative_points_vertex_weight():
 	mapData.playerNeareastPoint = newNeareastPoint
 	await reset_player_related_points()
 	
-	mapData.playerNeareastPoint.set_vertex_weight(0, null)
+	set_vertex_weights_iterative(mapData.playerNeareastPoint)
 
 func reset_player_related_points():
 	for p in playerRelatedPoints:
@@ -61,9 +60,57 @@ func reset_player_related_points():
 	
 	playerRelatedPoints.clear()
 
-func activate():
-	canCalculate = true
+func activate(body: Node2D):
+	if body.is_in_group("Player"):
+		canCalculate = true
+	
+	if body.is_in_group("Enemy"):
+		body.enter_room(self)
 
-func deactivate():
-	canCalculate = false
-	reset_player_related_points()
+func deactivate(body: Node2D):
+	if body.is_in_group("Player"):
+		canCalculate = false
+		reset_player_related_points()
+	
+	if body.is_in_group("Enemy"):
+		body.enter_room(self)
+
+func set_vertex_weights_iterative(start_node: Node2D):
+	if start_node == null:
+		return
+	
+	var queue = []
+	var visited = {}
+	
+	# Start with weight 0
+	queue.append({"node": start_node, "weight": 0, "parent": null})
+	
+	while not queue.is_empty():
+		var current = queue.pop_front()
+		var node: Node2D = current.node
+		var weight: int = current.weight
+		var parent: Node2D = current.parent
+		
+		# Skip if already visited with better or equal weight
+		if node in visited and visited[node] <= weight:
+			continue
+		
+		visited[node] = weight
+		
+		# ✅ Set vertex weight
+		node.vertexWeight = weight
+		node.modulate = Color(1.0, 1.0, 1.0, 1.0 - (0.2 * weight))
+		playerRelatedPoints.append(node)
+		
+		# ✅ Stop if max generation reached
+		if weight >= maxChildGeneration:
+			continue
+		
+		# ✅ Add neighbors to queue
+		for neighbor in node.relativeNodes:
+			if neighbor != parent:  # Don't go back
+				queue.append({
+					"node": neighbor,
+					"weight": weight + 1,
+					"parent": node
+				})

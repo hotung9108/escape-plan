@@ -3,7 +3,7 @@ extends CharacterBody2D
 var raycast: RayCast2D
 var shapecast: ShapeCast2D
 var player: Node2D
-@export var pathSystem: PathSystem
+@export var pathSystem: Node2D
 @export var mapData: Node
 
 @export var SPEED: float = 100.0
@@ -16,7 +16,7 @@ enum  ENEMY_STATE {
 	PATH_FINDING
 }
 var state: ENEMY_STATE = ENEMY_STATE.IDLE
-var currentNode: Node2D
+@export var currentNode: Node2D
 
 func _ready() -> void:
 	raycast = get_node("WallRayCast2D")
@@ -84,3 +84,6 @@ func _on_trigger_area_body_entered(body: Node2D) -> void:
 func _on_trigger_area_body_exited(body: Node2D) -> void:
 	if (body.is_in_group("Player")):
 		raycast.enabled = false
+
+func enter_room(room: Node2D):
+	pathSystem = room
