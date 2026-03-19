@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://73iql2w1b728"]
+[gd_scene load_steps=14 format=3 uid="uid://73iql2w1b728"]
 
 [ext_resource type="PackedScene" uid="uid://d0op85h1k8gvl" path="res://scenes/characters/player.tscn" id="1_ygwrf"]
 [ext_resource type="Script" uid="uid://ygw46gcaajm6" path="res://scripts/enemy/path_system.gd" id="2_newos"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://c7dr1to65jloj" path="res://scripts/enemy/enemy_direct_run.gd" id="5_newos"]
 [ext_resource type="Script" uid="uid://dpbdx6a7kctn1" path="res://scenes/enemy/enemy_path_finding.gd" id="7_cdu5w"]
 [ext_resource type="Texture2D" uid="uid://bkgco0o5ba8t7" path="res://assets/icon.svg" id="7_oo8y3"]
+[ext_resource type="Script" uid="uid://cmn1d6h72odfk" path="res://scripts/enemy/map_data.gd" id="9_ycd1i"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_newos"]
 
@@ -116,6 +117,9 @@ texture = ExtResource("7_oo8y3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Wall2"]
 shape = SubResource("RectangleShape2D_cdu5w")
+
+[node name="MapData" type="Node" parent="." groups=["Map"]]
+script = ExtResource("9_ycd1i")
 
 [connection signal="body_entered" from="Enemy/TriggerArea" to="Enemy" method="_on_trigger_area_body_entered"]
 [connection signal="body_exited" from="Enemy/TriggerArea" to="Enemy" method="_on_trigger_area_body_exited"]

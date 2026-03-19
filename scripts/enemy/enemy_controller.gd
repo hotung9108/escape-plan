@@ -4,6 +4,7 @@ var raycast: RayCast2D
 var shapecast: ShapeCast2D
 var player: Node2D
 @export var pathSystem: PathSystem
+@export var mapData: Node
 
 @export var SPEED: float = 100.0
 
@@ -25,6 +26,7 @@ func _ready() -> void:
 	player = get_tree().get_first_node_in_group("Player")
 	currentNode = pathSystem.find_object_nearest_node(self)
 	get_node("PathFinding").nextNode = currentNode
+	mapData = get_tree().get_first_node_in_group("Map")
 
 func _physics_process(delta: float):
 	state_decide()
@@ -69,7 +71,7 @@ func do_action():
 			if abs(position.x - pathFinding.nextNode.position.x) <= 2 and abs(position.y - pathFinding.nextNode.position.y) <= 2:
 				currentNode = pathFinding.nextNode
 				
-			direction = pathFinding.run(currentNode, pathSystem.playerNeareastPoint)
+			direction = pathFinding.run(currentNode, mapData.playerNeareastPoint)
 	
 	velocity = direction * SPEED
 	
