@@ -3,9 +3,11 @@ class_name PathSystem
 
 #Config
 static var maxChildGeneration: int = 6
+static var maxDistance: float = 15
 
 # Dependencies
 @export var player: Node2D
+@export var mapData: Node
 
 # Attributes
 @export var nodes: Array[Node2D] = []
@@ -18,40 +20,50 @@ var canCalculate: bool = false
 func _ready() -> void:
 	reset_player_related_points()
 	player = get_tree().get_first_node_in_group("Player")
+	mapData = get_tree().get_first_node_in_group("Map")
 	canCalculate = true
-	calculate_relative_points_vertex_weight()
+	calculate_player_relative_points_vertex_weight()
+	maxDistance = maxDistance * maxDistance
 
 func _process(delta: float):
-	calculate_relative_points_vertex_weight()
+	calculate_player_relative_points_vertex_weight()
 
-func find_nearest_node() -> Node2D:
-	if nodes.is_empty() or not player:
+func find_object_nearest_node(object: Node2D) -> Node2D:
+	if nodes.is_empty() or not object:
 		return null
+	
 	var nearest_node: Node2D = nodes[0]
-	var min_distance_squared := player.position.distance_squared_to(nearest_node.position)
+	var min_distance_squared := object.position.distance_squared_to(nearest_node.position)
 	for i in range(1, nodes.size()):
-		var distance_squared := player.position.distance_squared_to(nodes[i].position)
+		var distance_squared := object.position.distance_squared_to(nodes[i].position)
 		if distance_squared < min_distance_squared:
 			min_distance_squared = distance_squared
 			nearest_node = nodes[i]
-	return nearest_node
+	return nearest_node 
 
-func calculate_relative_points_vertex_weight():
+func calculate_player_relative_points_vertex_weight():
 	if !canCalculate: return
 	
-	var newNeareastPoint = find_nearest_node()
+	var newNeareastPoint = find_object_nearest_node(player)
 	
 	if newNeareastPoint == null: return
 	
-	if newNeareastPoint == playerNeareastPoint: return
+	if newNeareastPoint == mapData.playerNeareastPoint: return
 	
-	playerNeareastPoint = newNeareastPoint
+	mapData.playerNeareastPoint = newNeareastPoint
 	await reset_player_related_points()
 	
-	playerNeareastPoint.set_vertex_weight(0, null)
+	mapData.playerNeareastPoint.set_vertex_weight(0, null)
 
 func reset_player_related_points():
 	for p in playerRelatedPoints:
 		p.reset_node()
 	
 	playerRelatedPoints.clear()
+
+func activate():
+	canCalculate = true
+
+func deactivate():
+	canCalculate = false
+	reset_player_related_points()

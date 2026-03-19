@@ -2,11 +2,17 @@ extends Node2D
 
 @export var relativeNodes: Array[Node2D] = []
 
+var relativeNodesDistance: Array[float] = []
 var vertexWeight: int
+var parentPathSystem: PathSystem
 
 func _ready():
-	get_parent().nodes.append(self)
-	print(get_parent().nodes)
+	parentPathSystem = get_parent()
+	
+	parentPathSystem.nodes.append(self)
+	
+	for r in relativeNodes:
+		relativeNodesDistance.push_back(position.distance_squared_to(r.position))
 
 func set_vertex_weight(value: int, parent: Node2D):
 	vertexWeight = value
