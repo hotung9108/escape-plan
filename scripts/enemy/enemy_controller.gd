@@ -6,7 +6,7 @@ var player: Node2D
 @export var pathSystem: Node2D
 @export var mapData: Node
 
-@export var SPEED: float = 100.0
+@export var SPEED: float = 450
 
 var direction: Vector2
 var isPlayerInRange: bool = false
@@ -42,18 +42,20 @@ func state_decide():
 				currentNode = pathSystem.find_object_nearest_node(self)
 				get_node("PathFinding").nextNode = currentNode
 			state = ENEMY_STATE.PATH_FINDING
+			
+			print(currentNode)
 		else:
-			shapecast.enabled = true
-			shapecast.target_position = to_local(player.global_position)
-			shapecast.force_shapecast_update()
-			if shapecast.is_colliding():
-				if state != ENEMY_STATE.PATH_FINDING:
-					currentNode = pathSystem.find_object_nearest_node(self)
-					get_node("PathFinding").nextNode = currentNode
-				state = ENEMY_STATE.PATH_FINDING
-			else:
-				state = ENEMY_STATE.CHASE
-			shapecast.enabled = false
+			state = ENEMY_STATE.CHASE
+			#shapecast.enabled = true
+			#shapecast.target_position = to_local(player.global_position)
+			#shapecast.force_shapecast_update()
+			#if shapecast.is_colliding():
+				#if state != ENEMY_STATE.PATH_FINDING:
+					#currentNode = pathSystem.find_object_nearest_node(self)
+					#get_node("PathFinding").nextNode = currentNode
+				#state = ENEMY_STATE.PATH_FINDING
+			#else:
+			#shapecast.enabled = false
 	else:
 		state = ENEMY_STATE.IDLE
 
@@ -61,20 +63,33 @@ func do_action():
 	match state:
 		ENEMY_STATE.IDLE:
 			direction = Vector2.ZERO
+		
 		ENEMY_STATE.CHASE:
 			direction = get_node("DirectRun").run()
+		
 		ENEMY_STATE.PATH_FINDING:
 			var pathFinding = get_node("PathFinding")
+			
 			if pathFinding.nextNode == null:
 				direction = Vector2.ZERO
 				return
-			if abs(position.x - pathFinding.nextNode.position.x) <= 2 and abs(position.y - pathFinding.nextNode.position.y) <= 2:
+			
+			var dist_to_current = position.distance_to(currentNode.position)
+			
+			# ✅ Case 1: Not at currentNode yet - keep moving to it
+			if dist_to_current > 3:
+				direction = position.direction_to(currentNode.position)
+			
+			# ✅ Case 2: At currentNode, but nextNode is different - update and move
+			elif currentNode != pathFinding.nextNode:
 				currentNode = pathFinding.nextNode
-				
-			direction = pathFinding.run(currentNode, mapData.playerNeareastPoint)
+				direction = position.direction_to(currentNode.position)
+			
+			# ✅ Case 3: At currentNode and it's up to date - get next path
+			else:
+				direction = pathFinding.run(currentNode, mapData.playerNeareastPoint)
 	
 	velocity = direction * SPEED
-	
 	move_and_slide()
 
 func _on_trigger_area_body_entered(body: Node2D) -> void:
@@ -87,3 +102,4 @@ func _on_trigger_area_body_exited(body: Node2D) -> void:
 
 func enter_room(room: Node2D):
 	pathSystem = room
+	print(room.get_parent().name)

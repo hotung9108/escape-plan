@@ -1,5 +1,7 @@
 extends Node2D
 
+var wallRaycast: RayCast2D
+
 @export var relativeNodes: Array[Node2D] = []
 
 var relativeNodesDistance: Array[float] = []
@@ -30,6 +32,10 @@ func _draw():
 
 		draw_line(Vector2.ZERO, local_pos, color, 2.0)
 func _ready():
+	clear_connections()
+	
+	wallRaycast = get_node("RayCast2D")
+	
 	reset_node()
 	parentPathSystem = get_parent()
 	
@@ -63,3 +69,17 @@ func set_vertex_weight(value: int, parent: Node2D):
 func reset_node():
 	vertexWeight = PathSystem.maxChildGeneration + 1
 	modulate = Color.CRIMSON
+
+func check_wall(position: Vector2) -> bool:
+	
+	wallRaycast.enabled = true
+	
+	wallRaycast.target_position = to_local(position)
+	wallRaycast.force_raycast_update()
+	
+	if wallRaycast.is_colliding():
+		wallRaycast.enabled = false
+		return true
+	
+	wallRaycast.enabled = false
+	return false
