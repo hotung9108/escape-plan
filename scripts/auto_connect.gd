@@ -16,7 +16,6 @@ func _ready():
 	await get_tree().process_frame 
 	
 	all_points = get_tree().get_nodes_in_group("Points")
-	print("Total points: ", all_points.size())
 	#await get_tree().create_timer(0.1).timeout
 	auto_connect()
 func is_blocked(target: Node2D) -> bool:
