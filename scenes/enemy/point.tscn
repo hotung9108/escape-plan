@@ -4,12 +4,13 @@
 [ext_resource type="Texture2D" uid="uid://bkgco0o5ba8t7" path="res://assets/icon.svg" id="2_fisnv"]
 [ext_resource type="Script" uid="uid://ccqe28t28rqhb" path="res://scripts/auto_connect.gd" id="3_fisnv"]
 
-[node name="Point" type="Node2D"]
+[node name="Point" type="Node2D" groups=["Points"]]
 z_index = -1
 script = ExtResource("1_ww3n8")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 1
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("2_fisnv")
 
