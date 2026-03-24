@@ -2,7 +2,7 @@ extends Node
 class_name PathSystem
 
 #Config
-static var maxChildGeneration: int = 6
+static var maxChildGeneration: int = 8
 static var maxDistance: float = 100
 
 # Dependencies
@@ -31,14 +31,21 @@ func find_object_nearest_node(object: Node2D) -> Node2D:
 	if nodes.is_empty() or not object:
 		return null
 	
-	var nearest_node: Node2D = nodes[0]
-	var min_distance_squared := object.position.distance_squared_to(nearest_node.position)
-	for i in range(1, nodes.size()):
-		var distance_squared := object.position.distance_squared_to(nodes[i].position)
+	var nearest_node: Node2D = null
+	var min_distance_squared: float = INF
+	
+	for node in nodes:
+		# ✅ Skip if wall blocking
+		if node.check_wall(object.position):
+			continue
+		
+		var distance_squared = object.position.distance_squared_to(node.position)
+		
 		if distance_squared < min_distance_squared:
 			min_distance_squared = distance_squared
-			nearest_node = nodes[i]
-	return nearest_node 
+			nearest_node = node
+	
+	return nearest_node
 
 func calculate_player_relative_points_vertex_weight():
 	if !canCalculate: return
@@ -62,18 +69,13 @@ func reset_player_related_points():
 
 func activate(body: Node2D):
 	if body.is_in_group("Player"):
-		canCalculate = true
+		mapData.activate_new_path_system(self)
 	
 	if body.is_in_group("Enemy"):
 		body.enter_room(self)
 
 func deactivate(body: Node2D):
-	if body.is_in_group("Player"):
-		canCalculate = false
-		reset_player_related_points()
-	
-	if body.is_in_group("Enemy"):
-		body.enter_room(self)
+	return
 
 func set_vertex_weights_iterative(start_node: Node2D):
 	if start_node == null:

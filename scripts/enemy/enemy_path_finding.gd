@@ -9,8 +9,8 @@ var pathIndex: int = 0
 var nextNode: Node2D = null
 
 func run(sNode: Node2D, eNode: Node2D) -> Vector2:
-	# Already at destination
-	if sNode == eNode:
+	# ✅ Check if at destination using distance, not just node equality
+	if sNode.position.distance_to(eNode.position) <= 3:
 		nextNode = eNode
 		return Vector2.ZERO
 	
@@ -23,7 +23,8 @@ func run(sNode: Node2D, eNode: Node2D) -> Vector2:
 	# Check if path exists
 	if path.is_empty():
 		nextNode = eNode
-		return Vector2.ZERO
+		# ✅ Still try to move towards goal even if no path found
+		return get_parent().position.direction_to(eNode.position)
 	
 	# Move to next waypoint if reached current one
 	if sNode == nextNode or nextNode == null:
@@ -32,6 +33,10 @@ func run(sNode: Node2D, eNode: Node2D) -> Vector2:
 	# Clamp pathIndex to stay within bounds
 	pathIndex = mini(pathIndex, path.size() - 1)
 	nextNode = path[pathIndex]
+	
+	# ✅ Double check we're not already at nextNode
+	if get_parent().position.distance_to(nextNode.position) <= 3:
+		return Vector2.ZERO
 	
 	# Return direction to next waypoint
 	return get_parent().position.direction_to(nextNode.position)

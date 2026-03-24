@@ -15,8 +15,7 @@ scale = Vector2(0.2, 0.2)
 texture = ExtResource("2_fisnv")
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
+collision_mask = 2
 
 [node name="AutoConnect" type="Node2D" parent="."]
 script = ExtResource("3_fisnv")
-
-[node name="RayCast2D" type="RayCast2D" parent="AutoConnect"]
