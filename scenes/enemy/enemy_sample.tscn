@@ -40,11 +40,11 @@ shape = SubResource("CircleShape2D_d4n40")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_5jlb7")
 
-[node name="DirectRun" type="Node" parent="."]
+[node name="DirectRun" type="Node2D" parent="."]
 physics_interpolation_mode = 2
 script = ExtResource("3_7lnb6")
 
-[node name="PathFinding" type="Node" parent="."]
+[node name="PathFinding" type="Node2D" parent="."]
 script = ExtResource("4_jet1s")
 
 [connection signal="body_entered" from="TriggerArea" to="." method="_on_trigger_area_body_entered"]

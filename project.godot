@@ -31,6 +31,7 @@ Spawn=""
 Prisonner=""
 Map=""
 Enemy=""
+Points=""
 
 [rendering]
 

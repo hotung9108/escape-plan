@@ -1,13 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://c7m174thiut6q"]
+[gd_scene load_steps=4 format=3 uid="uid://c7m174thiut6q"]
 
 [ext_resource type="Script" uid="uid://f1bf45brsr68" path="res://scripts/enemy/point_data.gd" id="1_ww3n8"]
 [ext_resource type="Texture2D" uid="uid://bkgco0o5ba8t7" path="res://assets/icon.svg" id="2_fisnv"]
+[ext_resource type="Script" uid="uid://ccqe28t28rqhb" path="res://scripts/auto_connect.gd" id="3_fisnv"]
 
-[node name="Point" type="Node2D"]
+[node name="Point" type="Node2D" groups=["Points"]]
 z_index = -1
 script = ExtResource("1_ww3n8")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 1
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("2_fisnv")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+
+[node name="AutoConnect" type="Node2D" parent="."]
+script = ExtResource("3_fisnv")
+
+[node name="RayCast2D" type="RayCast2D" parent="AutoConnect"]
