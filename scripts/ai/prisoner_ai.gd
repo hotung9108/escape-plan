@@ -14,6 +14,9 @@ var state: String
 func _ready():
 	player = get_tree().get_first_node_in_group("Player")
 
+func setup(color: Color):
+	get_node("AnimatedSprite2D").modulate = color
+
 func _physics_process(delta: float):
 
 	if player == null or player.global_position.distance_to(global_position) <= DISTANCE:

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c61oirjm6auk6"]
 
 [ext_resource type="Script" uid="uid://h1yswivgrq5l" path="res://scripts/ai/prisoner_ai.gd" id="1_dm5wk"]
-[ext_resource type="SpriteFrames" uid="uid://bdi67opo5heru" path="res://assets/animation/dino/blue_dino.tres" id="2_dm5wk"]
+[ext_resource type="SpriteFrames" uid="uid://dctww8lufeofa" path="res://assets/animation/dino/white_dino.tres" id="2_dm5wk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_011hk"]
 radius = 30.0
@@ -27,4 +27,4 @@ shape = SubResource("CircleShape2D_vx30l")
 z_index = -1
 position = Vector2(1, 1)
 sprite_frames = ExtResource("2_dm5wk")
-animation = &"idle"
+animation = &"run"

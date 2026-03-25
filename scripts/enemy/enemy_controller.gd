@@ -43,7 +43,6 @@ func state_decide():
 				get_node("PathFinding").nextNode = currentNode
 			state = ENEMY_STATE.PATH_FINDING
 			
-			print(currentNode)
 		else:
 			state = ENEMY_STATE.CHASE
 			#shapecast.enabled = true
@@ -102,4 +101,3 @@ func _on_trigger_area_body_exited(body: Node2D) -> void:
 
 func enter_room(room: Node2D):
 	pathSystem = room
-	print(room.get_parent().name)
