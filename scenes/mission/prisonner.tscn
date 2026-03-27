@@ -11,7 +11,7 @@ radius = 30.0
 [node name="Prisonner" type="CharacterBody2D" groups=["Prisonner"]]
 script = ExtResource("1_dm5wk")
 DISTANCE = 30
-SPEED = 50.0
+SPEED = 250.0
 
 [node name="TriggerArea" type="Area2D" parent="."]
 visible = false

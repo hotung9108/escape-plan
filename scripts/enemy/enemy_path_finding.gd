@@ -7,31 +7,66 @@ var endNode: Node2D = null
 var path: Array = []
 var pathIndex: int = 0
 var nextNode: Node2D = null
+@export var currentNode: Node2D
+@export var pathSystem: Node2D
 
-func run(sNode: Node2D, eNode: Node2D) -> Vector2:
-	# ✅ Check if at destination using distance, not just node equality
-	if sNode.position.distance_to(eNode.position) <= 3:
-		nextNode = eNode
-		return Vector2.ZERO
+func setup():
+	currentNode = pathSystem.find_object_nearest_node(self)
+	get_node("PathFinding").nextNode = currentNode
+
+func change_room(room: Node2D):
+	pathSystem = room
+
+func run(target: Node2D) -> Vector2:
+	var pos = get_parent().position
 	
-	# Recalculate path if destination changed
-	if eNode != endNode:
-		endNode = eNode
-		calculate_path(sNode, eNode)
+	# Find nearest node in graph
+	currentNode = pathSystem.find_object_nearest_node(get_parent())
+	
+	# Initialize nextNode on first call
+	if nextNode == null:
+		nextNode = currentNode
+	
+	# Distance to current waypoint
+	var dist_to_waypoint = pos.distance_to(nextNode.position)
+	
+	# ✅ Check if we reached the waypoint
+	if dist_to_waypoint <= 3:
+		# We're at nextNode, get the next waypoint
+		update_next_waypoint(target)
+
+	# Move towards current waypoint
+	if nextNode and pos.distance_to(nextNode.position) > 3:
+		return pos.direction_to(nextNode.position)
+	
+	return Vector2.ZERO
+
+func update_next_waypoint(target: Node2D):
+	
+	# Check if at final destination
+	if nextNode.position.distance_to(target.position) <= 3:
+		# Stay at destination
+		return
+	
+	# Recalculate path if target changed
+	if target != endNode:
+		endNode = target
+		calculate_path(nextNode, target)
 		pathIndex = 0
 	
-	# Check if path exists
+	# No valid path
 	if path.is_empty():
-		nextNode = eNode
-		# ✅ Still try to move towards goal even if no path found
-		return get_parent().position.direction_to(eNode.position)
+		nextNode = target
+		return
 	
-	# Move to next waypoint if reached current one
-	if sNode == nextNode or nextNode == null:
-		pathIndex += 1
+	# ✅ Move to next node in path
+	pathIndex += 1
 	
-	# Clamp pathIndex to stay within bounds
-	pathIndex = mini(pathIndex, path.size() - 1)
+	# Clamp to valid index
+	if pathIndex >= path.size():
+		pathIndex = path.size() - 1
+		
+	# ✅ Update nextNode
 	nextNode = path[pathIndex]
 	
 	# ✅ Double check we're not already at nextNode
