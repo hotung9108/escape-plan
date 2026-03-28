@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2w8jc3kwrpxa"]
+
+[ext_resource type="Script" uid="uid://bn6wvvsdc8g48" path="res://scripts/ui/key_icon.gd" id="1_s8du6"]
+[ext_resource type="Texture2D" uid="uid://dxvu5302nnpm0" path="res://assets/sprites/Key/key-white_UI.png" id="2_kgqb3"]
+
+[node name="KeyIcon" type="AspectRatioContainer"]
+stretch_mode = 1
+script = ExtResource("1_s8du6")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_kgqb3")
+expand_mode = 2
+stretch_mode = 3

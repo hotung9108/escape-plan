@@ -106,7 +106,6 @@ size = Vector2(17, 21)
 size = Vector2(17, 3.5)
 
 [node name="CageObject" type="StaticBody2D"]
-z_index = -1
 y_sort_enabled = true
 scale = Vector2(2, 2)
 script = ExtResource("1_4rcx7")

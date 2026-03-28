@@ -2,9 +2,15 @@ extends CharacterBody2D
 
 const SPEED = 400
 var current_dir = "down"
+@export var health: int = 3
+
+signal player_death()
+signal init_player(health: int)
 
 func _ready():
 	$AnimatedSprite2D.play("front_idle")
+	
+	init_player.emit(health)
 
 func _physics_process(delta):
 	handle_movement()
@@ -51,3 +57,8 @@ func play_anim(moving):
 			anim.play("front_walk" if moving else "front_idle")
 		"up":
 			anim.play("back_walk" if moving else "back_idle")
+
+func deal_damge():
+	health -= 1
+	if health == 0:
+		player_death.emit()
