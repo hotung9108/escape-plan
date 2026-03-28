@@ -1,7 +1,19 @@
-[gd_scene load_steps=41 format=3 uid="uid://d0op85h1k8gvl"]
+[gd_scene load_steps=43 format=3 uid="uid://d0op85h1k8gvl"]
 
 [ext_resource type="Script" uid="uid://cuk64vpt8oyov" path="res://scripts/player/player_controller.gd" id="1_rp718"]
 [ext_resource type="Texture2D" uid="uid://chsecnrbdbfsv" path="res://assets/sprites/MysticWood/player.png" id="2_yewv4"]
+
+[sub_resource type="Gradient" id="Gradient_yewv4"]
+offsets = PackedFloat32Array(0, 0.78571427)
+colors = PackedColorArray(1, 1, 1, 1, 0.03876, 0.03876, 0.03876, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_76oj4"]
+gradient = SubResource("Gradient_yewv4")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+metadata/_snap_count = 2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_76oj4"]
 atlas = ExtResource("2_yewv4")
@@ -295,6 +307,10 @@ radius = 5.0
 z_index = 1
 script = ExtResource("1_rp718")
 
+[node name="PointLight2D" type="PointLight2D" parent="."]
+texture = SubResource("GradientTexture2D_76oj4")
+texture_scale = 1.5
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_hdner")
@@ -307,5 +323,4 @@ scale = Vector2(1.5, 1.5)
 shape = SubResource("CircleShape2D_yewv4")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+zoom = Vector2(4, 4)
