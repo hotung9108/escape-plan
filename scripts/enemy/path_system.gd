@@ -35,13 +35,13 @@ func find_object_nearest_node(object: Node2D) -> Node2D:
 	var min_distance_squared: float = INF
 	
 	for node in nodes:
-		# ✅ Skip if wall blocking
-		if node.check_wall(object.position):
-			continue
 		
 		var distance_squared = object.position.distance_squared_to(node.position)
 		
 		if distance_squared < min_distance_squared:
+			# ✅ Skip if wall blockinsg
+			if node.check_wall(object.position):
+				continue
 			min_distance_squared = distance_squared
 			nearest_node = node
 	

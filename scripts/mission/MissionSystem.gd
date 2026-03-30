@@ -76,7 +76,7 @@ func _on_timer_timeout():
 	time_change.emit(format_time(time_left))
 	
 	if time_left <= 0:
-		$Timer.stop()
+		timer.stop()
 		print("Time up")
 		time_up.emit()
 

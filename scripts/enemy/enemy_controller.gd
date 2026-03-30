@@ -3,6 +3,8 @@ extends CharacterBody2D
 var raycast: RayCast2D
 var shapecast: ShapeCast2D
 var player: Node2D
+var directRun: Node2D
+var pathFinding: Node2D
 
 @export var mapData: Node
 
@@ -27,6 +29,8 @@ func _ready() -> void:
 	raycast.collision_mask = 2
 	player = get_tree().get_first_node_in_group("Player")
 	mapData = get_tree().get_first_node_in_group("Map")
+	directRun = get_node("DirectRun")
+	pathFinding = get_node("PathFinding")
 
 func _physics_process(delta: float):
 	state_decide()
@@ -38,10 +42,10 @@ func state_decide():
 		raycast.target_position = to_local(player.global_position)
 		raycast.force_raycast_update()
 		if raycast.is_colliding():
+			if state != ENEMY_STATE.PATH_FINDING:
+				pathFinding.force_update_transform()
 			state = ENEMY_STATE.PATH_FINDING
-			
 		else:
-			
 			if player.position.distance_squared_to(position) < ATTACK_DISTANCE * ATTACK_DISTANCE:
 				state = ENEMY_STATE.ATTACK
 			else:
@@ -57,10 +61,9 @@ func do_action():
 		ENEMY_STATE.ATTACK:
 			direction = Vector2.ZERO
 		ENEMY_STATE.CHASE:
-			direction = get_node("DirectRun").run()
+			direction = directRun.run()
 		
 		ENEMY_STATE.PATH_FINDING:
-			var pathFinding = get_node("PathFinding")
 			direction = pathFinding.run(mapData.playerNeareastPoint)
 	
 	velocity = direction * SPEED

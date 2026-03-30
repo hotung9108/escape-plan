@@ -12,76 +12,80 @@ var nextNode: Node2D = null
 
 func setup():
 	currentNode = pathSystem.find_object_nearest_node(self)
-	get_node("PathFinding").nextNode = currentNode
+	nextNode = currentNode
 
 func change_room(room: Node2D):
 	pathSystem = room
+	# Reset pathfinding when changing rooms
+	currentNode = null
+	nextNode = null
+	path.clear()
+	endNode = null
 
 func run(target: Node2D) -> Vector2:
+	if target == null or pathSystem == null:
+		return Vector2.ZERO
+	
 	var pos = get_parent().position
 	
-	# Find nearest node in graph
-	currentNode = pathSystem.find_object_nearest_node(get_parent())
-	
-	# Initialize nextNode on first call
-	if nextNode == null:
+	# ✅ Initialize on first call
+	if currentNode == null:
+		currentNode = pathSystem.find_object_nearest_node(get_parent())
 		nextNode = currentNode
+		calculate_path(currentNode, target)
 	
-	# Distance to current waypoint
-	var dist_to_waypoint = pos.distance_to(nextNode.position)
+	# ✅ Recalculate path if target changed
+	if target != endNode:
+		endNode = target
+		calculate_path(currentNode, target)
+		pathIndex = 0
+		
+		# Set nextNode to first node in path (or target if no path)
+		if not path.is_empty():
+			nextNode = path[0]
+		else:
+			nextNode = target
 	
-	# ✅ Check if we reached the waypoint
-	if dist_to_waypoint <= 3:
-		# We're at nextNode, get the next waypoint
-		update_next_waypoint(target)
-
-	# Move towards current waypoint
-	if nextNode and pos.distance_to(nextNode.position) > 3:
-		return pos.direction_to(nextNode.position)
+	# ✅ Check if at currentNode
+	var dist_to_current = pos.distance_to(currentNode.position)
+	
+	if dist_to_current > 3:
+		# ✅ Not at currentNode yet - move to it first
+		return pos.direction_to(currentNode.position)
+	
+	# ✅ At currentNode - check if we need to advance
+	if pathIndex < path.size() - 1:
+		# ✅ Not at last node - advance to next
+		pathIndex += 1
+		nextNode = path[pathIndex]
+		currentNode = nextNode
+		
+		# Return direction to new currentNode
+		return pos.direction_to(currentNode.position)
+	else:
+		# ✅ At last node - check if we're at it
+		if path.size() > 0:
+			var last_node = path[path.size() - 1]
+			currentNode = last_node
+			nextNode = last_node  # ✅ Stay at last node
+			
+			# Check if close enough to last node
+			if pos.distance_to(last_node.position) <= 3:
+				return Vector2.ZERO
+			else:
+				return pos.direction_to(last_node.position)
 	
 	return Vector2.ZERO
 
-func update_next_waypoint(target: Node2D):
-	
-	# Check if at final destination
-	if nextNode.position.distance_to(target.position) <= 3:
-		# Stay at destination
-		return
-	
-	# Recalculate path if target changed
-	if target != endNode:
-		endNode = target
-		calculate_path(nextNode, target)
-		pathIndex = 0
-	
-	# No valid path
-	if path.is_empty():
-		nextNode = target
-		return
-	
-	# ✅ Move to next node in path
-	pathIndex += 1
-	
-	# Clamp to valid index
-	if pathIndex >= path.size():
-		pathIndex = path.size() - 1
-		
-	# ✅ Update nextNode
-	nextNode = path[pathIndex]
-	
-	# ✅ Double check we're not already at nextNode
-	if get_parent().position.distance_to(nextNode.position) <= 3:
-		return Vector2.ZERO
-	
-	# Return direction to next waypoint
-	return get_parent().position.direction_to(nextNode.position)
-
 func calculate_path(sNode: Node2D, eNode: Node2D):
+	if sNode == null or eNode == null:
+		return
+	
 	var actual_start = sNode
 	
 	# ✅ Check if start node is outside dynamic weight range
 	if sNode.vertexWeight >= PathSystem.maxChildGeneration:
-		print("Start node outside range, using DFS to find entry point")
+		print("Start node outside range, using BFS to find entry point")
 		actual_start = find_nearest_weighted_node_bfs(sNode)
 		
 		if actual_start == null:
@@ -207,4 +211,22 @@ func calculate_astar_path(sNode: Node2D, eNode: Node2D):
 		temp = marker.get(temp, null)
 	
 	pathIndex = 0
-	nextNode = path[0] if path.size() > 0 else null
+
+func force_recalculate(target: Node2D):
+	if target == null or pathSystem == null:
+		return
+	
+	# Find nearest node from current position
+	currentNode = pathSystem.find_object_nearest_node(get_parent())
+	nextNode = currentNode
+	endNode = target
+	
+	# Calculate new path from current position
+	calculate_path(currentNode, target)
+	pathIndex = 0
+	
+	# Set nextNode to first node in path
+	if not path.is_empty():
+		nextNode = path[0]
+	else:
+		nextNode = target
