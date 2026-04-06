@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://ccv4evfa1220f"]
+[gd_scene load_steps=0 format=3 uid="uid://ccv4evfa1220f"]
 
 [node name="LoseMenu" type="Control"]
 layout_mode = 3

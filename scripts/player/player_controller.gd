@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+@onready var walkingAudioPlayer: AudioStreamPlayer2D = $WalkingAudioStreamPlayer2D
+
 const SPEED = 400
 var current_dir = "down"
 @export var health: int = 3
@@ -33,9 +35,12 @@ func handle_movement():
 		velocity = input_dir * SPEED
 		update_direction(input_dir)
 		play_anim(true)
+		if not walkingAudioPlayer.playing:
+			walkingAudioPlayer.play()
 	else:
 		velocity = Vector2.ZERO
 		play_anim(false)
+		walkingAudioPlayer.stop()
 
 func update_direction(dir):
 	if abs(dir.x) > abs(dir.y):
