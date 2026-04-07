@@ -11,7 +11,7 @@ var nextNode: Node2D = null
 @export var pathSystem: Node2D
 
 func setup():
-	currentNode = pathSystem.find_object_nearest_node(self)
+	currentNode = pathSystem.find_object_nearest_node(self )
 	nextNode = currentNode
 
 func change_room(room: Node2D):
@@ -67,7 +67,7 @@ func run(target: Node2D) -> Vector2:
 		if path.size() > 0:
 			var last_node = path[path.size() - 1]
 			currentNode = last_node
-			nextNode = last_node  # ✅ Stay at last node
+			nextNode = last_node # ✅ Stay at last node
 			
 			# Check if close enough to last node
 			if pos.distance_to(last_node.position) <= 3:
@@ -109,7 +109,7 @@ func calculate_path(sNode: Node2D, eNode: Node2D):
 # ✅ DFS to find nearest node with vertex weight < maxChildGeneration
 func find_nearest_weighted_node_dfs(start: Node2D) -> Node2D:
 	var visited = {}
-	var queue = [start]  # BFS queue for distance-based search
+	var queue = [start] # BFS queue for distance-based search
 	var best_node: Node2D = null
 	var best_distance: float = INF
 	
@@ -168,7 +168,7 @@ func find_nearest_weighted_node_bfs(start: Node2D) -> Array:
 					parent_map[neighbor] = current
 				queue.append(neighbor)
 	
-	return []  # No weighted nodes reachable
+	return [] # No weighted nodes reachable
 
 # Original A* implementation
 func calculate_astar_path(sNode: Node2D, eNode: Node2D):

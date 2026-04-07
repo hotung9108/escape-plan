@@ -105,3 +105,11 @@ func deal_damge():
 	health -= 1
 	if health == 0:
 		player_death.emit()
+
+func toggle_debug_mode(enable: bool):
+	if enable:
+		get_node("Camera2D").zoom.x = 0.5
+		get_node("Camera2D").zoom.y = 0.5
+	else:
+		get_node("Camera2D").zoom.x = 4
+		get_node("Camera2D").zoom.y = 4
