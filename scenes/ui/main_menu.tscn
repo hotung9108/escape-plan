@@ -27,7 +27,7 @@ theme_override_constants/separation = 20
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 6
-text = "Escapse plan"
+text = "Escape Plan"
 horizontal_alignment = 1
 
 [node name="Start" type="Button" parent="CenterContainer/VBoxContainer"]

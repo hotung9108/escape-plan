@@ -7,14 +7,13 @@ extends Control
 @onready var main_container = $CenterContainer
 
 func _ready() -> void:
-	# Add a dark background dynamically if none is present
+	UIThemeManager.apply_theme(self)
 	var bg = ColorRect.new()
-	bg.color = Color(0.02, 0.0, 0.0, 1.0) # Very dark red/black
+	bg.color = Color(0.02, 0.0, 0.0, 1.0)
 	bg.set_anchors_preset(PRESET_FULL_RECT)
 	add_child(bg)
 	move_child(bg, 0)
 	
-	# Connect signals
 	start_btn.pressed.connect(_on_start_pressed)
 	settings_btn.pressed.connect(_on_options_pressed)
 	quit_btn.pressed.connect(_on_quit_pressed)
@@ -24,7 +23,6 @@ func _ready() -> void:
 	_setup_button_hover(settings_btn)
 	_setup_button_hover(quit_btn)
 
-	# Entrance animation
 	main_container.modulate = Color(1, 1, 1, 0)
 	var tween = create_tween()
 	tween.tween_property(main_container, "modulate", Color(1, 1, 1, 1), 1.5).set_trans(Tween.TRANS_SINE)

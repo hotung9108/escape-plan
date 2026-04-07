@@ -5,6 +5,7 @@ extends Control
 @onready var panel = $Panel
 
 func _ready() -> void:
+	UIThemeManager.apply_theme(self)
 	panel.modulate = Color(1, 1, 1, 0)
 	var tween = create_tween()
 	tween.tween_property(panel, "modulate", Color(1, 1, 1, 1), 0.5)
