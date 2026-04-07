@@ -18,6 +18,7 @@ var current_dir = "down"
 
 @onready var staminaRegenTimer: Timer = $StaminaRegenTimer
 
+signal player_health_change(health: int)
 signal player_death()
 signal init_player(health: int)
 signal stamina_changed(current: float, max_val: float)
@@ -101,8 +102,9 @@ func play_anim(moving):
 		"up":
 			anim.play("back_walk" if moving else "back_idle")
 
-func deal_damge():
+func deal_damage():
 	health -= 1
+	player_health_change.emit(health)
 	if health == 0:
 		player_death.emit()
 
