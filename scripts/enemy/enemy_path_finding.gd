@@ -11,7 +11,7 @@ var nextNode: Node2D = null
 @export var pathSystem: Node2D
 
 func setup():
-	currentNode = pathSystem.find_object_nearest_node(self)
+	currentNode = pathSystem.find_object_nearest_node(self )
 	nextNode = currentNode
 
 func change_room(room: Node2D):
@@ -67,7 +67,7 @@ func run(target: Node2D) -> Vector2:
 		if path.size() > 0:
 			var last_node = path[path.size() - 1]
 			currentNode = last_node
-			nextNode = last_node  # ✅ Stay at last node
+			nextNode = last_node # ✅ Stay at last node
 			
 			# Check if close enough to last node
 			if pos.distance_to(last_node.position) <= 3:
@@ -81,27 +81,35 @@ func calculate_path(sNode: Node2D, eNode: Node2D):
 	if sNode == null or eNode == null:
 		return
 	
+	var prefix_path = []
 	var actual_start = sNode
 	
 	# ✅ Check if start node is outside dynamic weight range
 	if sNode.vertexWeight >= PathSystem.maxChildGeneration:
 		print("Start node outside range, using BFS to find entry point")
-		actual_start = find_nearest_weighted_node_bfs(sNode)
+		prefix_path = find_nearest_weighted_node_bfs(sNode)
 		
-		if actual_start == null:
+		if prefix_path.is_empty():
 			print("No path to weighted nodes found!")
 			path.clear()
 			return
 		
+		actual_start = prefix_path[-1]
 		print("Found entry point: %s (weight: %d)" % [actual_start.name, actual_start.vertexWeight])
 	
 	# Now run A* from the actual start
 	calculate_astar_path(actual_start, eNode)
+	
+	# If we have a prefix, merge it (skipping duplicate entry point)
+	if not prefix_path.is_empty():
+		prefix_path.pop_back()
+		prefix_path.append_array(path)
+		path = prefix_path
 
 # ✅ DFS to find nearest node with vertex weight < maxChildGeneration
 func find_nearest_weighted_node_dfs(start: Node2D) -> Node2D:
 	var visited = {}
-	var queue = [start]  # BFS queue for distance-based search
+	var queue = [start] # BFS queue for distance-based search
 	var best_node: Node2D = null
 	var best_distance: float = INF
 	
@@ -131,8 +139,9 @@ func find_nearest_weighted_node_dfs(start: Node2D) -> Node2D:
 	return best_node
 
 # BFS guarantees shortest path to weighted zone
-func find_nearest_weighted_node_bfs(start: Node2D) -> Node2D:
+func find_nearest_weighted_node_bfs(start: Node2D) -> Array:
 	var visited = {}
+	var parent_map = {}
 	var queue = [start]
 	
 	while queue.size() > 0:
@@ -145,14 +154,21 @@ func find_nearest_weighted_node_bfs(start: Node2D) -> Node2D:
 		
 		# ✅ First weighted node we find is the closest (BFS property)
 		if current.vertexWeight < PathSystem.maxChildGeneration:
-			return current
+			var p = []
+			var temp = current
+			while temp != null:
+				p.push_front(temp)
+				temp = parent_map.get(temp, null)
+			return p
 		
 		# Add neighbors to queue
 		for neighbor in current.relativeNodes:
 			if not visited.has(neighbor):
+				if not parent_map.has(neighbor):
+					parent_map[neighbor] = current
 				queue.append(neighbor)
 	
-	return null  # No weighted nodes reachable
+	return [] # No weighted nodes reachable
 
 # Original A* implementation
 func calculate_astar_path(sNode: Node2D, eNode: Node2D):
@@ -230,3 +246,33 @@ func force_recalculate(target: Node2D):
 		nextNode = path[0]
 	else:
 		nextNode = target
+
+func patrol() -> Vector2:
+	if pathSystem == null:
+		return Vector2.ZERO
+	
+	var pos = get_parent().position
+	
+	# Initial setup if nothing is targeted
+	if endNode == null:
+		var start_node = pathSystem.find_object_nearest_node(get_parent())
+		if start_node:
+			return run(start_node)
+		return Vector2.ZERO
+	
+	# Check if reached target
+	var dist_to_target = pos.distance_to(endNode.position)
+	if dist_to_target <= 5.0:
+		var connections = endNode.relativeNodes
+		if connections.size() > 0:
+			var valid_nodes = []
+			var current_parent = endNode.get_parent()
+			for node in connections:
+				if node.get_parent() == current_parent:
+					valid_nodes.append(node)
+			
+			if valid_nodes.size() > 0:
+				var next_target = valid_nodes[randi() % valid_nodes.size()]
+				return run(next_target)
+				
+	return run(endNode)

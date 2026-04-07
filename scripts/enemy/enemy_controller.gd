@@ -51,10 +51,12 @@ func state_decide():
 			else:
 				state = ENEMY_STATE.CHASE
 	else:
-		state = ENEMY_STATE.IDLE
+		state = ENEMY_STATE.PATROL
 
 func do_action():
 	match state:
+		ENEMY_STATE.PATROL:
+			direction = pathFinding.patrol()
 		ENEMY_STATE.IDLE:
 			direction = Vector2.ZERO
 			

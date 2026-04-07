@@ -324,7 +324,9 @@ scale = Vector2(1.5, 1.5)
 shape = SubResource("CircleShape2D_yewv4")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(4, 4)
 
 [node name="WalkingAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_76oj4")
+
+[node name="StaminaRegenTimer" type="Timer" parent="."]
+autostart = true

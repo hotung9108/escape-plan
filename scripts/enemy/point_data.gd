@@ -31,6 +31,7 @@ func _draw():
 		var color = Color.GREEN.lerp(Color.RED, dist / 300.0)
 
 		draw_line(Vector2.ZERO, local_pos, color, 2.0)
+		
 func _ready():
 	clear_connections()
 	
