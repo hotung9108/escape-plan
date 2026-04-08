@@ -14,6 +14,7 @@ var current_stamina: float
 var is_sprinting: bool = false
 var is_exhausted: bool = false
 var current_dir = "down"
+var is_dead: bool = false
 @export var health: int = 3
 @export var shake_intensity: float = 5.0
 @export var shake_duration: float = 0.2
@@ -43,6 +44,8 @@ func _physics_process(delta):
 	move_and_slide()
 
 func handle_movement():
+	if is_dead:
+		return
 	var input_dir = Vector2.ZERO
 
 	if Input.is_action_pressed("ui_right"):
@@ -111,12 +114,26 @@ func play_anim(moving):
 			anim.play("back_walk" if moving else "back_idle")
 
 func get_hit(damage: int):
+	if is_dead:
+		return
+		
 	health -= damage
-	player_health_change.emit(health)
-	shake_camera()
-	hitAudioPlayer.play()
-	if health == 0:
+	if health <= 0:
+		health = 0
+		is_dead = true
+		velocity = Vector2.ZERO
+		walkingAudioPlayer.stop()
+		$AnimatedSprite2D.play("death")
+		player_health_change.emit(health)
+		shake_camera()
+		hitAudioPlayer.play()
+		await $AnimatedSprite2D.animation_finished
+		await get_tree().create_timer(2.0).timeout
 		player_death.emit()
+	else:
+		player_health_change.emit(health)
+		shake_camera()
+		hitAudioPlayer.play()
 
 func shake_camera():
 	var camera = $Camera2D
