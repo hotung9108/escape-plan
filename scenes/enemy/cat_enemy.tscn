@@ -1,7 +1,6 @@
-[gd_scene load_steps=74 format=3 uid="uid://5d7rndl2pk8n"]
+[gd_scene load_steps=73 format=3 uid="uid://5d7rndl2pk8n"]
 
 [ext_resource type="Script" uid="uid://4eeq3haqv5v4" path="res://scripts/enemy/cat_enemy_controller.gd" id="1_cs23s"]
-[ext_resource type="Texture2D" uid="uid://ctv3lnk3netwk" path="res://assets/tiles/MysticWood/tilesets/floors/wooden.png" id="2_cs23s"]
 [ext_resource type="Script" uid="uid://c7dr1to65jloj" path="res://scripts/enemy/enemy_direct_run.gd" id="3_2dxkp"]
 [ext_resource type="Script" uid="uid://dpbdx6a7kctn1" path="res://scripts/enemy/enemy_path_finding.gd" id="4_x6tf0"]
 [ext_resource type="Texture2D" uid="uid://d075iwbwv5c06" path="res://assets/sprites/Cat/CatRecolors2.png" id="6_2dxkp"]
@@ -456,6 +455,9 @@ animations = [{
 [node name="CatEnemy" type="CharacterBody2D" groups=["Enemy"]]
 y_sort_enabled = true
 script = ExtResource("1_cs23s")
+SPEED = 100.0
+ATTACK_DISTANCE = 50.0
+ATTACK_COOLDOWN = 2.0
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -481,10 +483,12 @@ scale = Vector2(60, 60)
 shape = SubResource("CircleShape2D_d4n40")
 debug_color = Color(1, 0.12941177, 0.003921569, 0.14509805)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true
-texture = ExtResource("2_cs23s")
+position = Vector2(1, -6)
+sprite_frames = SubResource("SpriteFrames_kx6nm")
+animation = &"right_attack"
+autoplay = "backward_idle"
 
 [node name="DirectRun" type="Node2D" parent="."]
 physics_interpolation_mode = 2
@@ -492,13 +496,6 @@ script = ExtResource("3_2dxkp")
 
 [node name="PathFinding" type="Node2D" parent="."]
 script = ExtResource("4_x6tf0")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-y_sort_enabled = true
-position = Vector2(1, -6)
-sprite_frames = SubResource("SpriteFrames_kx6nm")
-animation = &"right_attack"
-autoplay = "backward_idle"
 
 [node name="Attack" type="Node2D" parent="."]
 

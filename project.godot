@@ -29,6 +29,7 @@ Map=""
 Enemy=""
 Points=""
 Shadow=""
+PathSystem=""
 
 [input]
 
