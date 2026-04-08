@@ -43,7 +43,7 @@ func state_decide():
 		raycast.force_raycast_update()
 		if raycast.is_colliding():
 			if state != ENEMY_STATE.PATH_FINDING:
-				pathFinding.force_update_transform()
+				pathFinding.force_recalculate(mapData.playerNeareastPoint)
 			state = ENEMY_STATE.PATH_FINDING
 		else:
 			if player.position.distance_squared_to(position) < ATTACK_DISTANCE * ATTACK_DISTANCE:

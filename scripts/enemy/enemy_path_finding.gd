@@ -235,6 +235,7 @@ func force_recalculate(target: Node2D):
 	endNode = target
 	
 	# Calculate new path from current position
+	path.clear()
 	calculate_path(currentNode, target)
 	pathIndex = 0
 	
