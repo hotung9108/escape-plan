@@ -109,6 +109,8 @@ func get_hit(damage: int):
 		player_death.emit()
 
 func toggle_debug_mode(enable: bool):
+	get_node("PointLight2D").visible = !enable
+	
 	if enable:
 		get_node("Camera2D").zoom.x = 0.5
 		get_node("Camera2D").zoom.y = 0.5
