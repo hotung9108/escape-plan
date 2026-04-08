@@ -8,6 +8,9 @@ var pathFinding: Node2D
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_animated_sprite: AnimatedSprite2D = $Attack/AttackAnimatedSprite2D
 @onready var attack_area: Area2D = $Attack/AttackArea2D
+@onready var main_audio_player: AudioStreamPlayer2D = $MainAudioStreamPlayer2D
+@onready var attack_audio_player: AudioStreamPlayer2D = $AttackAudioStreamPlayer2D
+@onready var attack_effect_audio_player: AudioStreamPlayer2D = $Attack/AttackEffectAudioStreamPlayer2D
 
 var current_direction: String = "forward"
 
@@ -67,6 +70,7 @@ func _trigger_attack_effect():
 	attack_animated_sprite.visible = true
 	attack_animated_sprite.play("attack")
 	attack_area.monitoring = true
+	attack_effect_audio_player.play()
 	
 	# Handle players already in the attack area immediately
 	var space_state = get_world_2d().direct_space_state
@@ -85,6 +89,15 @@ func _physics_process(delta: float):
 	
 	do_action()
 	update_animation()
+	update_audio()
+
+func update_audio():
+	if state == ENEMY_STATE.ATTACK:
+		if main_audio_player.playing:
+			main_audio_player.stop()
+	else:
+		if not main_audio_player.playing:
+			main_audio_player.play()
 
 func update_animation():
 	var action = "idle"
@@ -123,6 +136,7 @@ func state_decide():
 						update_direction_to_point(player.global_position)
 						state = ENEMY_STATE.ATTACK
 						can_attack = false
+						attack_audio_player.play()
 						get_tree().create_timer(0.5).timeout.connect(_trigger_attack_effect)
 				else:
 					state = ENEMY_STATE.IDLE
