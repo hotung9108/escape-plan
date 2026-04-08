@@ -1,9 +1,10 @@
-[gd_scene load_steps=45 format=3 uid="uid://d0op85h1k8gvl"]
+[gd_scene load_steps=46 format=3 uid="uid://d0op85h1k8gvl"]
 
 [ext_resource type="Script" uid="uid://cuk64vpt8oyov" path="res://scripts/player/player_controller.gd" id="1_rp718"]
 [ext_resource type="Texture2D" uid="uid://chsecnrbdbfsv" path="res://assets/sprites/MysticWood/player.png" id="2_yewv4"]
 [ext_resource type="AudioStream" uid="uid://d2jrxwi6mv7co" path="res://assets/sounds/player_walking.mp3" id="3_76oj4"]
 [ext_resource type="AudioStream" uid="uid://dym8upyu3v0pf" path="res://assets/sounds/mc-hurt.mp3" id="4_dyp2m"]
+[ext_resource type="Script" uid="uid://cw0pn8ejkn0tg" path="res://scripts/player/flickering_light.gd" id="4_flickering"]
 
 [sub_resource type="Gradient" id="Gradient_yewv4"]
 offsets = PackedFloat32Array(0, 0.78571427)
@@ -312,6 +313,7 @@ script = ExtResource("1_rp718")
 [node name="PointLight2D" type="PointLight2D" parent="."]
 texture = SubResource("GradientTexture2D_76oj4")
 texture_scale = 1.5
+script = ExtResource("4_flickering")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true

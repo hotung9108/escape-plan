@@ -16,7 +16,6 @@ func setup():
 
 func change_room(room: Node2D):
 	pathSystem = room
-	# Reset pathfinding when changing rooms
 	currentNode = null
 	nextNode = null
 	path.clear()
@@ -28,13 +27,11 @@ func run(target: Node2D) -> Vector2:
 	
 	var pos = get_parent().position
 	
-	# ✅ Initialize on first call
 	if currentNode == null:
 		currentNode = pathSystem.find_object_nearest_node(get_parent())
 		nextNode = currentNode
 		calculate_path(currentNode, target)
 	
-	# ✅ Recalculate path if target changed
 	if target != endNode:
 		endNode = target
 		calculate_path(currentNode, target)

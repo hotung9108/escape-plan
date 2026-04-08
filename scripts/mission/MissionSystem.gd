@@ -1,16 +1,13 @@
 extends Node
 
-# Dependencies
 @export var rescuse_point: Area2D
 @export var timer: Timer
 
-# Attributes 
 @export var missionObjects: Array[mission_object] = []
 @export var rescusePosition: Vector2
 @export var maxPickUpPrisonnerNumber: int = 1
 @export var time_left = 300
 
-# Resources
 var keyObject = preload("res://scenes/mission/key_object.tscn")
 var cageObject = preload("res://scenes/mission/cage_object.tscn")
 var prisonnerObject = preload("res://scenes/mission/prisonner.tscn")
@@ -22,7 +19,6 @@ signal time_change(text: String)
 signal time_up()
 signal rescue_all()
 
-# Runtime vars
 var missionSpawnNodes: Array[Node2D] = []
 var pickUpKeys: Array[int] = []
 var pickUpPrisonners: Array[Node2D] = []
@@ -47,11 +43,9 @@ func _setup():
 		add_child(rescuse_point)
 	rescuse_point.body_entered.connect(on_player_enter_spawn)
 	
-	# ✅ Reset available nodes pool
 	available_spawn_nodes = missionSpawnNodes.duplicate()
 	
 	for i in range(missionObjects.size()):
-		# Create key object
 		var key_spawn_node = get_and_remove_random_spawn_node()
 		if (key_spawn_node != null):
 			var newKeyObject = keyObject.instantiate()
@@ -62,7 +56,6 @@ func _setup():
 			newKeyObject.modulate = missionObjects[i].color
 			newKeyObject.get_node("TriggerArea").body_entered.connect(func(body): on_player_enter_key(newKeyObject, body))
 		
-		# Create cage object
 		var cage_spawn_node = get_and_remove_random_spawn_node()
 		if (cage_spawn_node != null):
 			var newCageObject = cageObject.instantiate()
