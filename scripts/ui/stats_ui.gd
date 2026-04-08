@@ -7,10 +7,11 @@ func add_heart(number: int):
 		var new_h = heart_icon.instantiate()
 		get_node("VBoxContainer/HealthBar").add_child(new_h)
 	
-func remove_children_to_count(target_count: int):
+func update_heart(target_count: int):
 	var object = get_node("VBoxContainer/HealthBar")
 	while object.get_child_count() > target_count:
 		var last_child = object.get_child(object.get_child_count() - 1)
+		object.remove_child(last_child)
 		last_child.queue_free()
 
 func update_stamina(current: float, max_val: float):

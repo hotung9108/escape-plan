@@ -445,7 +445,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack",
-"speed": 24.0
+"speed": 40.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7lnb6"]

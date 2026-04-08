@@ -16,8 +16,10 @@ var current_direction: String = "forward"
 @export var SPEED: float = 450
 @export var ATTACK_DISTANCE: float = 20
 @export var ATTACK_COOLDOWN: float = 1.0
+@export var DAMAGE: int = 1
 
 var can_attack: bool = true
+var _hit_bodies: Array[Node2D] = []
 
 var direction: Vector2
 var isPlayerInRange: bool = false
@@ -58,13 +60,25 @@ func _on_animation_finished():
 func _on_attack_effect_finished():
 	attack_animated_sprite.visible = false
 	attack_area.monitoring = false
+	_hit_bodies.clear()
 
 func _trigger_attack_effect():
+	_hit_bodies.clear()
 	attack_animated_sprite.visible = true
 	attack_animated_sprite.play("attack")
 	attack_area.monitoring = true
-	for body in attack_area.get_overlapping_bodies():
-		on_hit_player(body)
+	
+	# Handle players already in the attack area immediately
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsShapeQueryParameters2D.new()
+	var shape_node = attack_area.get_child(0) as CollisionShape2D
+	query.shape = shape_node.shape
+	query.transform = shape_node.global_transform
+	query.collision_mask = attack_area.collision_mask
+	
+	var results = space_state.intersect_shape(query)
+	for result in results:
+		on_hit_player(result.collider)
 
 func _physics_process(delta: float):
 	state_decide()
@@ -104,11 +118,14 @@ func state_decide():
 			state = ENEMY_STATE.PATH_FINDING
 		else:
 			if player.position.distance_squared_to(position) < ATTACK_DISTANCE * ATTACK_DISTANCE:
-				if can_attack and state != ENEMY_STATE.ATTACK:
-					update_direction_to_point(player.global_position)
-					state = ENEMY_STATE.ATTACK
-					can_attack = false
-					get_tree().create_timer(0.25).timeout.connect(_trigger_attack_effect)
+				if can_attack:
+					if state != ENEMY_STATE.ATTACK:
+						update_direction_to_point(player.global_position)
+						state = ENEMY_STATE.ATTACK
+						can_attack = false
+						get_tree().create_timer(0.5).timeout.connect(_trigger_attack_effect)
+				else:
+					state = ENEMY_STATE.IDLE
 			else:
 				state = ENEMY_STATE.CHASE
 	else:
@@ -144,5 +161,10 @@ func enter_room(room: Node2D):
 	get_node("PathFinding").change_room(room)
 
 func on_hit_player(body: Node2D):
+	if body in _hit_bodies:
+		return
+		
 	if (body.is_in_group("Player")):
-		body.deal_damage()
+		_hit_bodies.append(body)
+		if body.has_method("get_hit"):
+			body.get_hit(DAMAGE)

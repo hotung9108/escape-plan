@@ -102,8 +102,8 @@ func play_anim(moving):
 		"up":
 			anim.play("back_walk" if moving else "back_idle")
 
-func deal_damage():
-	health -= 1
+func get_hit(damage: int):
+	health -= damage
 	player_health_change.emit(health)
 	if health == 0:
 		player_death.emit()
