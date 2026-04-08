@@ -13,6 +13,8 @@ func _input(event: InputEvent):
 func toggle_debug_mode():
 	is_enabled = !is_enabled
 	
+	get_tree().get_first_node_in_group("Shadow").visible = !is_enabled
+	
 	var player = get_tree().get_first_node_in_group("Player")
 	
 	player.toggle_debug_mode(is_enabled)
