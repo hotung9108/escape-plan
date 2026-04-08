@@ -15,8 +15,11 @@ var is_sprinting: bool = false
 var is_exhausted: bool = false
 var current_dir = "down"
 @export var health: int = 3
+@export var shake_intensity: float = 5.0
+@export var shake_duration: float = 0.2
 
 @onready var staminaRegenTimer: Timer = $StaminaRegenTimer
+@onready var hitAudioPlayer: AudioStreamPlayer2D = $HitAudioStreamPlayer2D
 
 signal player_health_change(health: int)
 signal player_death()
@@ -31,6 +34,9 @@ func _ready():
 	stamina_changed.emit(current_stamina, max_stamina)
 	staminaRegenTimer.wait_time = stamina_regenerate_time
 	staminaRegenTimer.timeout.connect(_on_stamina_regen_timer_timeout)
+	
+	# Preload hit sound
+	hitAudioPlayer.stream = preload("res://assets/sounds/mc-hurt.mp3")
 
 func _physics_process(delta):
 	handle_movement()
@@ -70,11 +76,13 @@ func handle_movement():
 		play_anim(true)
 		if not walkingAudioPlayer.playing:
 			walkingAudioPlayer.play()
+		walkingAudioPlayer.pitch_scale = speed_mult
 	else:
 		velocity = Vector2.ZERO
 		is_sprinting = false
 		play_anim(false)
 		walkingAudioPlayer.stop()
+		walkingAudioPlayer.pitch_scale = 1.0
 
 func _on_stamina_regen_timer_timeout():
 	if not is_sprinting and current_stamina < max_stamina:
@@ -105,8 +113,27 @@ func play_anim(moving):
 func get_hit(damage: int):
 	health -= damage
 	player_health_change.emit(health)
+	shake_camera()
+	hitAudioPlayer.play()
 	if health == 0:
 		player_death.emit()
+
+func shake_camera():
+	var camera = $Camera2D
+	if camera:
+		var tween = create_tween()
+		var shake_count = 10
+		var time_per_shake = shake_duration / shake_count
+		
+		for i in range(shake_count):
+			var rand_offset = Vector2(
+				randf_range(-shake_intensity, shake_intensity),
+				randf_range(-shake_intensity, shake_intensity)
+			)
+			tween.tween_property(camera, "offset", rand_offset, time_per_shake)
+		
+		# Return to original position
+		tween.tween_property(camera, "offset", Vector2.ZERO, 0.05)
 
 func toggle_debug_mode(enable: bool):
 	get_node("PointLight2D").visible = !enable
