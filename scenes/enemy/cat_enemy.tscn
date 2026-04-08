@@ -454,10 +454,12 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_7lnb6"]
 
 [node name="CatEnemy" type="CharacterBody2D" groups=["Enemy"]]
+y_sort_enabled = true
 script = ExtResource("1_cs23s")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(2, 2)
 shape = SubResource("CircleShape2D_newos")
 
 [node name="WallRayCast2D" type="RayCast2D" parent="."]
@@ -481,6 +483,7 @@ debug_color = Color(1, 0.12941177, 0.003921569, 0.14509805)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 visible = false
+y_sort_enabled = true
 texture = ExtResource("2_cs23s")
 
 [node name="DirectRun" type="Node2D" parent="."]
@@ -491,6 +494,7 @@ script = ExtResource("3_2dxkp")
 script = ExtResource("4_x6tf0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+y_sort_enabled = true
 position = Vector2(1, -6)
 sprite_frames = SubResource("SpriteFrames_kx6nm")
 animation = &"right_attack"
@@ -499,6 +503,7 @@ autoplay = "backward_idle"
 [node name="Attack" type="Node2D" parent="."]
 
 [node name="AttackAnimatedSprite2D" type="AnimatedSprite2D" parent="Attack"]
+z_index = 2
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_cvf73")
 animation = &"attack"

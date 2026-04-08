@@ -20,6 +20,7 @@ signal mission_init(total_missions_number: int)
 signal rescuse(number: int)
 signal time_change(text: String)
 signal time_up()
+signal rescue_all()
 
 # Runtime vars
 var missionSpawnNodes: Array[Node2D] = []
@@ -143,3 +144,4 @@ func on_player_enter_spawn(body):
 
 		if rescusePrisonnerNumber >= missionObjects.size():
 			print("Mission completed")
+			rescue_all.emit()
