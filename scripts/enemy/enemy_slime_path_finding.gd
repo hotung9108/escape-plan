@@ -60,7 +60,6 @@ func run(target: Node2D) -> Vector2:
 		# Return direction to new currentNode
 		return pos.direction_to(currentNode.position)
 	else:
-		# ✅ At last node - check if we're at it
 		if path.size() > 0:
 			var last_node = path[path.size() - 1]
 			currentNode = last_node
