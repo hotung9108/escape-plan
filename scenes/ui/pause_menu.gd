@@ -36,13 +36,10 @@ func _on_resume_pressed() -> void:
 	GameManager.unpause_game()
 
 func _on_settings_pressed() -> void:
-	# Hide the pause menu content
 	self.hide()
 	
-	# Instantiate settings menu into the high-priority CanvasLayer
 	var settings = load("res://scenes/ui/setting_menu.tscn").instantiate()
 	settings.process_mode = Node.PROCESS_MODE_ALWAYS
-	# Make sure it fills the screen
 	settings.set_anchors_preset(PRESET_FULL_RECT)
 	GameManager.pause_layer.add_child(settings)
 

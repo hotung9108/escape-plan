@@ -81,3 +81,13 @@ func _on_trigger_area_body_exited(body: Node2D) -> void:
 
 func enter_room(room: Node2D):
 	get_node("PathFinding").change_room(room)
+
+
+func _on_vision_area_body_entered(body: Node2D) -> void:
+	if (body.is_in_group("Player")):
+		raycast.enabled = false
+
+
+func _on_vision_area_body_exited(body: Node2D) -> void:
+	if (body.is_in_group("Player")):
+		raycast.enabled = false
