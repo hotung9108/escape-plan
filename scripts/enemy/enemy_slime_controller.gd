@@ -36,7 +36,6 @@ func _ready() -> void:
 	pathFinding = get_node("PathFinding")
 	animatedSprite = get_node("AnimatedSprite2D")
 	
-	# Mặc định spawn với front_idle
 	lastDirection = Vector2.DOWN
 	if animatedSprite:
 		animatedSprite.play("front_idle")
@@ -104,12 +103,10 @@ func _on_vision_area_body_exited(body: Node2D) -> void:
 		raycast.enabled = false
 
 func update_animation() -> void:
-	# Cập nhật hướng nếu đang di chuyển
 	if direction != Vector2.ZERO:
 		lastDirection = direction.normalized()
 		update_sprite_flip()
 	
-	# Chọn animation dựa trên state
 	var animation_name = get_animation_name(state)
 	
 	if animatedSprite and animatedSprite.animation != animation_name:
@@ -121,10 +118,8 @@ func update_sprite_flip() -> void:
 	if not animatedSprite:
 		return
 	
-	# Nếu là side animation, kiểm tra xem cần flip hay không
 	var current_animation = animatedSprite.animation
 	if "side" in current_animation:
-		# Nếu hướng sang trái (x < 0), flip sprite
 		if lastDirection.x < -0.1:
 			animatedSprite.flip_h = true
 		else:
@@ -150,11 +145,9 @@ func get_animation_name(current_state: ENEMY_STATE) -> String:
 func get_direction_suffix(dir: Vector2) -> String:
 	var normalized_dir = dir.normalized()
 	
-	# Quyết định hướng chính dựa trên trục Y
 	if normalized_dir.y < -0.5:
 		return "back"
 	elif normalized_dir.y > 0.5:
 		return "front"
 	else:
-		# Side movement
 		return "side"
