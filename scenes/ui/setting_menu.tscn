@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bph3eptslqop2"]
 
-[ext_resource type="Script" path="res://scenes/ui/setting_menu.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://m5lefh88augo" path="res://scenes/ui/setting_menu.gd" id="1_script"]
 
 [node name="SettingMenu" type="Control"]
 layout_mode = 3
@@ -60,3 +60,5 @@ layout_mode = 2
 size_flags_vertical = 7
 text = "Back
 "
+
+[connection signal="drag_started" from="Panel/VBoxContainer/HSlider" to="." method="on_volume_change"]

@@ -788,16 +788,16 @@ animation = &"attack"
 frame = 25
 frame_progress = 1.0
 
-[node name="AttackEffectAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Attack"]
+[node name="AttackEffectAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Attack" groups=["Sound"]]
 stream = ExtResource("6_6fbmm")
 volume_db = 2.0
 
-[node name="MainAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="MainAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." groups=["Sound"]]
 stream = ExtResource("7_6fbmm")
 max_distance = 500.0
 attenuation = 0.5358867
 
-[node name="AttackAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="AttackAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." groups=["Sound"]]
 stream = ExtResource("8_o3rcr")
 
 [connection signal="body_entered" from="VisionArea" to="." method="_on_trigger_area_body_entered"]
