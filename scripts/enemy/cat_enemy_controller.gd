@@ -58,6 +58,26 @@ func _ready() -> void:
 	attack_animated_sprite.visible = false
 	attack_area.monitoring = false
 	detect_area.scale = Vector2(DETECT_SCALE_START, DETECT_SCALE_START)
+	
+	# If not already in a room, find the nearest one
+	if pathFinding.pathSystem == null:
+		var nearest = find_nearest_path_system()
+		if nearest:
+			enter_room(nearest)
+	
+	state = ENEMY_STATE.PATROL
+
+func find_nearest_path_system() -> Node2D:
+	var nearest: Node2D = null
+	var min_dist_sq = INF
+	for ps in mapData.all_path_systems:
+		var node = ps.find_object_nearest_node(self)
+		if node:
+			var dist_sq = global_position.distance_squared_to(node.global_position)
+			if dist_sq < min_dist_sq:
+				min_dist_sq = dist_sq
+				nearest = ps
+	return nearest
 
 func _on_animation_finished():
 	if state == ENEMY_STATE.ATTACK:

@@ -334,11 +334,12 @@ radius = 5.0
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 z_index = 1
+scale = Vector2(1.5, 1.5)
 script = ExtResource("1_rp718")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 texture = SubResource("GradientTexture2D_76oj4")
-texture_scale = 1.5
+texture_scale = 2.5
 script = ExtResource("4_flickering")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -355,6 +356,7 @@ scale = Vector2(1.5, 1.5)
 shape = SubResource("CircleShape2D_yewv4")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.5, 0.5)
 
 [node name="WalkingAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." groups=["Sound"]]
 stream = ExtResource("3_76oj4")

@@ -459,6 +459,7 @@ script = ExtResource("1_cs23s")
 SPEED = 100.0
 ATTACK_DISTANCE = 50.0
 ATTACK_COOLDOWN = 2.0
+DETECT_SCALE_CHASE = 1200.0
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

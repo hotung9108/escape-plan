@@ -159,5 +159,5 @@ func toggle_debug_mode(enable: bool):
 		get_node("Camera2D").zoom.x = 0.5
 		get_node("Camera2D").zoom.y = 0.5
 	else:
-		get_node("Camera2D").zoom.x = 4
-		get_node("Camera2D").zoom.y = 4
+		get_node("Camera2D").zoom.x = 2
+		get_node("Camera2D").zoom.y = 2
