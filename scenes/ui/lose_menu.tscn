@@ -1,4 +1,6 @@
-[gd_scene load_steps=0 format=3 uid="uid://ccv4evfa1220f"]
+[gd_scene load_steps=2 format=3 uid="uid://c3wwbvb6j6ehi"]
+
+[ext_resource type="Script" uid="uid://bumc2qhim2nk2" path="res://scenes/ui/lose_menu.gd" id="1_6jrcj"]
 
 [node name="LoseMenu" type="Control"]
 layout_mode = 3
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_6jrcj")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1

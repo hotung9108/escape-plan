@@ -101,7 +101,7 @@ func set_vertex_weights_iterative(start_node: Node2D):
 		
 		# ✅ Set vertex weight
 		node.vertexWeight = weight
-		node.modulate = Color(1.0, 1.0, 1.0, 1.0 - (0.2 * weight))
+		node.queue_redraw()
 		playerRelatedPoints.append(node)
 		
 		# ✅ Stop if max generation reached

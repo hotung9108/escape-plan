@@ -29,6 +29,8 @@ Map=""
 Enemy=""
 Points=""
 Shadow=""
+PathSystem=""
+Sound=""
 
 [input]
 

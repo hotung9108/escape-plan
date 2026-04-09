@@ -12,12 +12,15 @@ func _draw():
 	if not debug_draw:
 		return
 
-	draw_circle(Vector2.ZERO, 5, Color.YELLOW)
+	var weight_ratio = clamp(float(vertexWeight) / PathSystem.maxChildGeneration, 0.0, 1.0)
+	var node_color = Color.GREEN.lerp(Color.RED, weight_ratio)
+	
+	if vertexWeight > PathSystem.maxChildGeneration:
+		node_color = Color.CRIMSON
+
+	draw_circle(Vector2.ZERO, 5, node_color)
 
 	for i in range(relativeNodes.size()):
-		if i >= relativeNodesDistance.size():
-			continue
-
 		var r = relativeNodes[i]
 		if not is_instance_valid(r):
 			continue
@@ -26,11 +29,16 @@ func _draw():
 			continue
 
 		var local_pos = to_local(r.global_position)
+		
+		var r_weight = r.get("vertexWeight") if "vertexWeight" in r else PathSystem.maxChildGeneration
+		var avg_weight = (vertexWeight + r_weight) / 2.0
+		var line_weight_ratio = clamp(avg_weight / PathSystem.maxChildGeneration, 0.0, 1.0)
+		var line_color = Color.GREEN.lerp(Color.RED, line_weight_ratio)
+		
+		if vertexWeight > PathSystem.maxChildGeneration or r_weight > PathSystem.maxChildGeneration:
+			line_color = Color.DIM_GRAY
 
-		var dist = relativeNodesDistance[i]
-		var color = Color.GREEN.lerp(Color.RED, dist / 300.0)
-
-		draw_line(Vector2.ZERO, local_pos, color, 2.0)
+		draw_line(Vector2.ZERO, local_pos, line_color, 2.0)
 		
 func _ready():
 	clear_connections()
@@ -56,7 +64,7 @@ func add_connection(node: Node2D):
 	relativeNodesDistance.append(dist)
 func set_vertex_weight(value: int, parent: Node2D):
 	vertexWeight = value
-	modulate = Color(1.0, 1.0, 1.0, 1.0 - (0.2 * value))
+	queue_redraw()
 	
 	get_parent().playerRelatedPoints.append(self)
 	
@@ -69,7 +77,7 @@ func set_vertex_weight(value: int, parent: Node2D):
 
 func reset_node():
 	vertexWeight = PathSystem.maxChildGeneration + 1
-	modulate = Color.CRIMSON
+	queue_redraw()
 
 func check_wall(position: Vector2) -> bool:
 	

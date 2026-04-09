@@ -11,6 +11,7 @@ var pathFinding: Node2D
 @onready var main_audio_player: AudioStreamPlayer2D = $MainAudioStreamPlayer2D
 @onready var attack_audio_player: AudioStreamPlayer2D = $AttackAudioStreamPlayer2D
 @onready var attack_effect_audio_player: AudioStreamPlayer2D = $Attack/AttackEffectAudioStreamPlayer2D
+@onready var detect_area: Area2D = $VisionArea
 
 var current_direction: String = "forward"
 
@@ -20,6 +21,8 @@ var current_direction: String = "forward"
 @export var ATTACK_DISTANCE: float = 20
 @export var ATTACK_COOLDOWN: float = 1.0
 @export var DAMAGE: int = 1
+@export var DETECT_SCALE_START: float = 400.0
+@export var DETECT_SCALE_CHASE: float = 2000.0
 
 var can_attack: bool = true
 var _hit_bodies: Array[Node2D] = []
@@ -33,7 +36,7 @@ enum ENEMY_STATE {
 	ATTACK,
 	PATROL
 }
-var state: ENEMY_STATE = ENEMY_STATE.IDLE
+var state: ENEMY_STATE = ENEMY_STATE.PATROL
 
 func _ready() -> void:
 	raycast = get_node("WallRayCast2D")
@@ -54,6 +57,27 @@ func _ready() -> void:
 	attack_animated_sprite.animation_finished.connect(_on_attack_effect_finished)
 	attack_animated_sprite.visible = false
 	attack_area.monitoring = false
+	detect_area.scale = Vector2(DETECT_SCALE_START, DETECT_SCALE_START)
+	
+	# If not already in a room, find the nearest one
+	if pathFinding.pathSystem == null:
+		var nearest = find_nearest_path_system()
+		if nearest:
+			enter_room(nearest)
+	
+	state = ENEMY_STATE.PATROL
+
+func find_nearest_path_system() -> Node2D:
+	var nearest: Node2D = null
+	var min_dist_sq = INF
+	for ps in mapData.all_path_systems:
+		var node = ps.find_object_nearest_node(self)
+		if node:
+			var dist_sq = global_position.distance_squared_to(node.global_position)
+			if dist_sq < min_dist_sq:
+				min_dist_sq = dist_sq
+				nearest = ps
+	return nearest
 
 func _on_animation_finished():
 	if state == ENEMY_STATE.ATTACK:
@@ -126,8 +150,11 @@ func state_decide():
 		raycast.target_position = to_local(player.global_position)
 		raycast.force_raycast_update()
 		if raycast.is_colliding():
+			if mapData.playerNeareastPoint == null:
+				state = ENEMY_STATE.IDLE
+				return
 			if state != ENEMY_STATE.PATH_FINDING:
-				pathFinding.force_update_transform()
+				pathFinding.force_recalculate(mapData.playerNeareastPoint)
 			state = ENEMY_STATE.PATH_FINDING
 		else:
 			if player.position.distance_squared_to(position) < ATTACK_DISTANCE * ATTACK_DISTANCE:
@@ -166,10 +193,12 @@ func do_action():
 func _on_trigger_area_body_entered(body: Node2D) -> void:
 	if (body.is_in_group("Player")):
 		raycast.enabled = true
+		detect_area.scale = Vector2(DETECT_SCALE_CHASE, DETECT_SCALE_CHASE)
 
 func _on_trigger_area_body_exited(body: Node2D) -> void:
 	if (body.is_in_group("Player")):
 		raycast.enabled = false
+		detect_area.scale = Vector2(DETECT_SCALE_START, DETECT_SCALE_START)
 
 func enter_room(room: Node2D):
 	get_node("PathFinding").change_room(room)
