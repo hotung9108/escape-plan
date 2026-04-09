@@ -12,6 +12,7 @@ var pathFinding: Node2D
 @onready var attack_audio_player: AudioStreamPlayer2D = $AttackAudioStreamPlayer2D
 @onready var attack_effect_audio_player: AudioStreamPlayer2D = $Attack/AttackEffectAudioStreamPlayer2D
 @onready var attack_object: Node2D = $Attack
+@onready var detect_area: Area2D = $VisionArea
 
 @export var mapData: Node
 
@@ -21,6 +22,7 @@ var pathFinding: Node2D
 @export var DAMAGE: int = 1
 
 var can_attack: bool = true
+var can_change_to_path_finding: bool = false
 var _hit_bodies: Array[Node2D] = []
 
 var direction: Vector2
@@ -74,19 +76,33 @@ func state_decide():
 	if raycast.enabled:
 		raycast.target_position = to_local(player.global_position)
 		raycast.force_raycast_update()
-		if raycast.is_colliding():
-			if state != ENEMY_STATE.PATH_FINDING:
-				pathFinding.force_update_transform()
-			state = ENEMY_STATE.PATH_FINDING
-		else:
+		
+		# If we have direct line of sight, we gain the ability to use path finding
+		var looking_direct = !raycast.is_colliding()
+		if looking_direct:
+			can_change_to_path_finding = true
+			
+		if can_change_to_path_finding:
 			if player.position.distance_squared_to(position) < ATTACK_DISTANCE * ATTACK_DISTANCE:
 				if can_attack:
 					state = ENEMY_STATE.ATTACK
 				else:
 					state = ENEMY_STATE.IDLE
-			else:
+			elif looking_direct:
 				state = ENEMY_STATE.CHASE
+			else:
+				if mapData.playerNeareastPoint == null:
+					state = ENEMY_STATE.IDLE
+					return
+				if state != ENEMY_STATE.PATH_FINDING:
+					pathFinding.force_update_transform()
+				state = ENEMY_STATE.PATH_FINDING
+		else:
+			# In detect area but haven't seen player directly yet
+			state = ENEMY_STATE.PATROL
 	else:
+		# Out of detect area, reset detection flag and patrol
+		can_change_to_path_finding = false
 		state = ENEMY_STATE.PATROL
 
 func do_action():
@@ -123,12 +139,13 @@ func enter_room(room: Node2D):
 
 func _on_vision_area_body_entered(body: Node2D) -> void:
 	if (body.is_in_group("Player")):
-		raycast.enabled = false
+		raycast.enabled = true
 
 
 func _on_vision_area_body_exited(body: Node2D) -> void:
 	if (body.is_in_group("Player")):
 		raycast.enabled = false
+		can_change_to_path_finding = false
 
 func update_animation() -> void:
 	if direction != Vector2.ZERO:

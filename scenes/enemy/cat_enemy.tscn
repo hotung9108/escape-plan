@@ -44,6 +44,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_cdu5w"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d4n40"]
+radius = 1.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kx6nm"]
 atlas = ExtResource("6_2dxkp")
@@ -479,7 +480,6 @@ collision_mask = 2
 [node name="VisionArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="VisionArea"]
-scale = Vector2(60, 60)
 shape = SubResource("CircleShape2D_d4n40")
 debug_color = Color(1, 0.12941177, 0.003921569, 0.14509805)
 
