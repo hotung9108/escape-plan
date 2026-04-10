@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Escape plan"
-run/main_scene="uid://c86stdyugk21j"
+run/main_scene="uid://cr1804fy7reyk"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://assets/icon.svg"
 
