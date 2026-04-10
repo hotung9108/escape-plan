@@ -20,3 +20,11 @@ func _find_player() -> void:
 func _process(_delta: float) -> void:
     if player != null:
         minimap_camera.global_position = player.global_position
+        
+    # Check if the game world is darkened (Shadow visible)
+    var shadow = get_tree().get_first_node_in_group("Shadow")
+    if shadow and shadow is CanvasModulate:
+        var multiplier = 8.0 if shadow.visible else 1.0
+        var container = $MarginContainer/SubViewportContainer
+        if container.material and container.material is ShaderMaterial:
+            container.material.set_shader_parameter("brightness", multiplier)
