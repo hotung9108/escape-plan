@@ -1,7 +1,22 @@
-[gd_scene load_steps=41 format=3 uid="uid://d0op85h1k8gvl"]
+[gd_scene load_steps=49 format=3 uid="uid://d0op85h1k8gvl"]
 
 [ext_resource type="Script" uid="uid://cuk64vpt8oyov" path="res://scripts/player/player_controller.gd" id="1_rp718"]
 [ext_resource type="Texture2D" uid="uid://chsecnrbdbfsv" path="res://assets/sprites/MysticWood/player.png" id="2_yewv4"]
+[ext_resource type="AudioStream" uid="uid://d2jrxwi6mv7co" path="res://assets/sounds/player_walking.mp3" id="3_76oj4"]
+[ext_resource type="AudioStream" uid="uid://dym8upyu3v0pf" path="res://assets/sounds/mc-hurt.mp3" id="4_dyp2m"]
+[ext_resource type="Script" path="res://scripts/player/flickering_light.gd" id="4_flickering"]
+
+[sub_resource type="Gradient" id="Gradient_yewv4"]
+offsets = PackedFloat32Array(0, 0.78571427)
+colors = PackedColorArray(1, 1, 1, 1, 0.03876, 0.03876, 0.03876, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_76oj4"]
+gradient = SubResource("Gradient_yewv4")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+metadata/_snap_count = 2
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_76oj4"]
 atlas = ExtResource("2_yewv4")
@@ -50,6 +65,18 @@ region = Rect2(192, 240, 48, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_k4v7y"]
 atlas = ExtResource("2_yewv4")
 region = Rect2(240, 240, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hdner"]
+atlas = ExtResource("2_yewv4")
+region = Rect2(0, 432, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m38kj"]
+atlas = ExtResource("2_yewv4")
+region = Rect2(48, 432, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v1y1o"]
+atlas = ExtResource("2_yewv4")
+region = Rect2(96, 432, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xrqxk"]
 atlas = ExtResource("2_yewv4")
@@ -197,6 +224,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_hdner")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m38kj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1y1o")
+}],
+"loop": false,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_xrqxk")
 }, {
 "duration": 1.0,
@@ -291,20 +332,37 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_yewv4"]
 radius = 5.0
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
+z_index = 1
+scale = Vector2(1.5, 1.5)
 script = ExtResource("1_rp718")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+texture = SubResource("GradientTexture2D_76oj4")
+texture_scale = 2.5
+script = ExtResource("4_flickering")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_hdner")
-animation = &"side_idle"
+animation = &"death"
+frame = 2
+frame_progress = 1.0
 offset = Vector2(0, -15)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["Player"]]
 position = Vector2(1, -2)
 scale = Vector2(1.5, 1.5)
 shape = SubResource("CircleShape2D_yewv4")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.5, 0.5)
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+[node name="WalkingAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." groups=["Sound"]]
+stream = ExtResource("3_76oj4")
+
+[node name="StaminaRegenTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="HitAudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." groups=["Sound"]]
+stream = ExtResource("4_dyp2m")

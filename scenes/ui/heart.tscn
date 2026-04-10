@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgk8t73acevt"]
+
+[ext_resource type="Texture2D" uid="uid://yqv2y8sybjci" path="res://assets/sprites/Heart/Heart and health bars/sprites/heart.png" id="1_86inv"]
+
+[node name="AspectRatioContainer" type="AspectRatioContainer"]
+stretch_mode = 3
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_86inv")
+expand_mode = 2
