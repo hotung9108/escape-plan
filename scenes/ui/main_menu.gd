@@ -15,6 +15,7 @@ func _ready() -> void:
 	move_child(bg, 0)
 	
 	start_btn.pressed.connect(_on_start_pressed)
+	inst_btn.pressed.connect(_on_instructions_pressed)
 	settings_btn.pressed.connect(_on_options_pressed)
 	quit_btn.pressed.connect(_on_quit_pressed)
 	
@@ -45,6 +46,10 @@ func _on_start_pressed() -> void:
 	tween.tween_property(main_container, "modulate", Color(0, 0, 0, 0), 1.0)
 	await tween.finished
 	get_tree().change_scene_to_file("res://scenes/maps/map_01.tscn")
+
+func _on_instructions_pressed() -> void:
+	var instruction_panel = load("res://scenes/ui/instruction_menu.tscn").instantiate()
+	add_child(instruction_panel)
 
 func _on_options_pressed() -> void:
 	var tween = create_tween()
